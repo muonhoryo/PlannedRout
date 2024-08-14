@@ -1,0 +1,10 @@
+/Assets/Scenes
+/.vs
+/Library
+/Logs
+*.meta
+/obj
+/Packages
+/ProjectSettings
+/Temp
+/UserSettings
