@@ -1,4 +1,8 @@
 /Assets/Scenes
+/Assets/Editor
+/Assets/Prefabs
+/Assets/Scripts/Editor
+/Assets/Scripts/GameData
 /.vs
 /Library
 /Logs

@@ -4,15 +4,16 @@ namespace PlannedRout.LevelManagment
 {
     public interface ILevelPart
     {
-        public enum LevelPartType
+        public enum LevelPartType:byte
         {
             Wall,
             Door,
-            RoomPoint,
             Point,
             Fruit,
             Energy
         }
+
+        public LevelPartType PartType_ { get; }
 
         public void RemovePart();
     }

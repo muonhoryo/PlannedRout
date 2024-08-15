@@ -15,7 +15,7 @@ namespace PlannedRout.LevelManagment
         public static void GenerateLevelSave(LevelData data,string filePath)
         {
             if (!File.Exists(filePath))
-                File.Create(filePath);
+                File.Create(filePath).Close();
             using( StreamWriter sw=new StreamWriter(filePath, false))
             {
                 sw.Write(SerializeLevel(data));

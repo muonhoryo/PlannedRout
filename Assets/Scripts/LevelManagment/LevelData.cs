@@ -98,6 +98,64 @@ namespace PlannedRout.LevelManagment
             }
         }
         [Serializable]
+        public struct LevelMap
+        {
+            public int Height;
+            public int Width;
+            [SerializeField]private LevelPartType[] Map;
+
+            public LevelMap(int height, int width, LevelPartType[][] map)
+            {
+                if (height <= 0)
+                    throw new Exception("Invalid level height.");
+                if (width <= 0)
+                    throw new Exception("Invalid level wdth.");
+
+                if (map.Length != width)
+                    throw new Exception("Invalid map data.");
+                foreach (var column in map)
+                    if (column.Length != height)
+                        throw new Exception("Invalid map data.");
+
+                Height = height;
+                Width = width;
+                Map = new LevelPartType[height * width];
+                for(int i=0;i<width;i++)
+                    for(int j = 0; j < height; j++)
+                    {
+                        Map[i * height + j] = map[i][j];
+                    }
+            }
+            public LevelMap(int height,int width, LevelPartType[] map)
+            {
+                if (height <= 0)
+                    throw new Exception("Invalid level height.");
+                if (width <= 0)
+                    throw new Exception("Invalid level wdth.");
+
+                Height = height;
+                Width = width;
+                Map = map;
+            }
+
+            public LevelPartType GetLevelPart(int x, int y) =>
+                Map[x * Height + y];
+            public LevelPartType[][] GetMatrixMap()
+            {
+                LevelPartType[][] matrix = new LevelPartType[Width][];
+                for (int i = 0; i < Width; i++)
+                    matrix[i] = new LevelPartType[Height];
+
+                for(int i= 0; i < Map.Length; i++)
+                {
+                    int x = i / Height;
+                    int y=i % Height;
+                    matrix[x][y] = Map[i];
+                }
+                return matrix;
+            }
+        }
+        [Serializable]
         public enum LevelPartType
         {
             Empty,
@@ -108,48 +166,30 @@ namespace PlannedRout.LevelManagment
             Fruit
         }
 
-        public int LevelHeight;
-        public int LevelWidth;
 
-        public LevelPartType[/*columns*/][/*row*/] LevelMap;
+        public LevelMap LvlMap;
         public Vector2Int PlayerSpawnPoint;
         public Vector2Int[] EnemySpawnPoints;
         public Vector2Int RoomPoint;
+        public Vector2Int FruitSpawnPoint;
         public int[] FruitSpawnTriggers;
         public GlobalConstData GlobalConsts;
 
-        public LevelData(int levelHeight,
-                         int levelWidth,
-                         LevelPartType[][] levelMap,
+        public LevelData(LevelMap levelMap,
                          Vector2Int playerSpawnPoint,
                          Vector2Int[] enemySpawnPoints,
                          Vector2Int roomPoint,
+                         Vector2Int fruitSpawnPoint,
                          int[] fruitSpawnTriggers,
                          GlobalConstData globalConsts)
         {
-            LevelHeight = levelHeight;
-            LevelWidth = levelWidth;
-            LevelMap = levelMap;
+            LvlMap = levelMap;
             PlayerSpawnPoint = playerSpawnPoint;
             EnemySpawnPoints = enemySpawnPoints;
             RoomPoint = roomPoint;
+            FruitSpawnPoint = fruitSpawnPoint;
             FruitSpawnTriggers = fruitSpawnTriggers;
             GlobalConsts = globalConsts;
-        }
-
-        public bool ValidateData()
-        {
-            if (LevelHeight <= 0)
-                return false;
-            if (LevelWidth <= 0)
-                return false;
-            if (LevelMap.Length != LevelHeight)
-                return false;
-            foreach (var column in LevelMap)
-                if (column.Length != LevelWidth)
-                    return false;
-
-            return true;
         }
     }
 }
