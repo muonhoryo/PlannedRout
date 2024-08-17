@@ -107,7 +107,7 @@ namespace PlannedRout.LevelManagment
                                 break;
                             }
                     }
-                } //Fill map
+                } //Fill map with unmovable objects
 
             for (int i = 0; i < wallsList.Count; i++)
                 ChangeWallSprite(wallsList[i], wallsPoses[i]);

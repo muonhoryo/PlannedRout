@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Energy.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Fruit.cs" />
+    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PlayerSpeedComponent.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\ICollectableObject.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Door.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\LevelData.cs" />
@@ -70,13 +71,19 @@
     <Compile Include="Assets\Scripts\LevelManagment\LevelLoadingData.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CollectableObject_ScoreIncreaser.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\LevelSerialization.cs" />
+    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\ISpeedProvider.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Point.cs" />
+    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\SpeedComponent.cs" />
     <Compile Include="Assets\Scripts\Others\TimersManager.cs" />
     <Compile Include="Assets\Scripts\GameScoreManagment\ScoreManager.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Wall.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\MovingComponent.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\ILevelPart.cs" />
+    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemySpeedComponent.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\LevelManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Libraries\MuonhoryoLibrary.dll" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -413,6 +420,10 @@
     </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
       <HintPath>Library\PackageCache\com.unity.collections@1.2.4\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MuonhoryoLibrary">
+      <HintPath>Assets\Libraries\MuonhoryoLibrary.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
