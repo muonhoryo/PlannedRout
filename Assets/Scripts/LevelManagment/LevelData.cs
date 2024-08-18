@@ -169,7 +169,10 @@ namespace PlannedRout.LevelManagment
 
         public LevelMap LvlMap;
         public Vector2Int PlayerSpawnPoint;
-        public Vector2Int[] EnemySpawnPoints;
+        public Vector2Int EnemySpawnPoint_Red;
+        public Vector2Int EnemySpawnPoint_Blue;
+        public Vector2Int EnemySpawnPoint_Pink;
+        public Vector2Int EnemySpawnPoint_Orange;
         public Vector2Int RoomPoint;
         public Vector2Int FruitSpawnPoint;
         public int[] FruitSpawnTriggers;
@@ -177,7 +180,10 @@ namespace PlannedRout.LevelManagment
 
         public LevelData(LevelMap levelMap,
                          Vector2Int playerSpawnPoint,
-                         Vector2Int[] enemySpawnPoints,
+                         Vector2Int enemySpawnPoint_Red,
+                         Vector2Int enemySpawnPoint_Blue,
+                         Vector2Int enemySpawnPoint_Pink,
+                         Vector2Int enemySpawnPoint_Orange,
                          Vector2Int roomPoint,
                          Vector2Int fruitSpawnPoint,
                          int[] fruitSpawnTriggers,
@@ -185,11 +191,26 @@ namespace PlannedRout.LevelManagment
         {
             LvlMap = levelMap;
             PlayerSpawnPoint = playerSpawnPoint;
-            EnemySpawnPoints = enemySpawnPoints;
+            EnemySpawnPoint_Red = enemySpawnPoint_Red;
+            EnemySpawnPoint_Blue= enemySpawnPoint_Blue;
+            EnemySpawnPoint_Pink = enemySpawnPoint_Pink;
+            EnemySpawnPoint_Orange= enemySpawnPoint_Orange;
             RoomPoint = roomPoint;
             FruitSpawnPoint = fruitSpawnPoint;
             FruitSpawnTriggers = fruitSpawnTriggers;
             GlobalConsts = globalConsts;
+        }
+    }
+
+    public struct LoadedLevelData
+    {
+        public ILevelPart[][] LevelMap;
+        public GameObject PlayerCharacter;
+
+        public LoadedLevelData(ILevelPart[][] levelMap, GameObject playerCharacter)
+        {
+            LevelMap = levelMap;
+            PlayerCharacter = playerCharacter;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace PlannedRout.LevelManagment
 {
     public static class LevelLoader
     {
-        public static ILevelPart[][] LoadLevel(LevelData data)
+        public static LoadedLevelData LoadLevel(LevelData data)
         {
             ILevelPart[][] map =  new ILevelPart[data.LvlMap.Width][];
             for (int i = 0; i < data.LvlMap.Width; i++)
@@ -112,7 +112,23 @@ namespace PlannedRout.LevelManagment
             for (int i = 0; i < wallsList.Count; i++)
                 ChangeWallSprite(wallsList[i], wallsPoses[i]);
 
-            return map;
+            //Fill map with characters
+
+            GameObject PlaceNoneMapObject(Vector2Int pos,GameObject prefab)
+            {
+                GameObject obj = GameObject.Instantiate(prefab, parentObj);
+                obj.transform.position = (Vector2)pos;
+                return obj;
+            }
+
+            GameObject playerObj = PlaceNoneMapObject(data.PlayerSpawnPoint, LevelLoadingData.Instance_.LevelObjsPrefabs.PlayerPrefab_);
+            PlaceNoneMapObject(data.EnemySpawnPoint_Red, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Red_);
+            PlaceNoneMapObject(data.EnemySpawnPoint_Blue, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Blue_);
+            PlaceNoneMapObject(data.EnemySpawnPoint_Pink, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Pink_);
+            PlaceNoneMapObject(data.EnemySpawnPoint_Orange, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Orange_);
+
+            LoadedLevelData loadedData = new(map, playerObj);
+            return loadedData;
         }
     }
 }

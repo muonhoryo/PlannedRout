@@ -21,6 +21,8 @@ namespace PlannedRout.LevelManagment
         public LevelData LevelData_ => (LevelData)LvlData;
         public LevelData.GlobalConstData GlobalConsts_ => LevelData_.GlobalConsts;
 
+        public GameObject PlayerCharacter_ { get; private set; }
+
         private ILevelPart[/*columns*/][/*rows*/] LevelMap;
 
         private void Awake()
@@ -33,7 +35,9 @@ namespace PlannedRout.LevelManagment
 
         public void RegisterLevelData(LevelData data)
         {
-            LevelMap=LevelLoader.LoadLevel(data);
+            var loadedData = LevelLoader.LoadLevel(data);
+            LevelMap=loadedData.LevelMap;
+            PlayerCharacter_=loadedData.PlayerCharacter;
             LvlData = data;
         }
         public void UnloadLevel()
@@ -56,6 +60,10 @@ namespace PlannedRout.LevelManagment
         public ILevelPart GetCell(int row,int column)
         {
             return LevelMap[column][row];
+        }
+        public bool CheckCellPosition(int row,int column)
+        {
+
         }
 
         private void OnDestroy()
@@ -98,7 +106,10 @@ namespace PlannedRout.LevelManagment
                 Vector2Int[] PointsPositions;
                 Vector2Int[] WallsPositions;
                 Vector2Int RoomPointPosition;
-                Vector2Int[] EnemiesPositions;
+                Vector2Int EnemyPos_Red;
+                Vector2Int EnemyPos_Blue;
+                Vector2Int EnemyPos_Pink;
+                Vector2Int EnemyPos_Orange;
                 Vector2Int DoorPosition;
 
                 Func<GameObject, Vector2Int> selectionFunc = (obj) =>
@@ -126,13 +137,10 @@ namespace PlannedRout.LevelManagment
                 PointsPositions = FindObjectsPositions(ref PointTag);
                 WallsPositions = FindObjectsPositions(ref WallTag);
                 RoomPointPosition = FindObjectPosition(ref RoomPointTag);
-                EnemiesPositions = new Vector2Int[]
-                {
-                    FindObjectPosition(ref EnemyTag_Red),
-                    FindObjectPosition(ref EnemyTag_Pink),
-                    FindObjectPosition(ref EnemyTag_Blue),
-                    FindObjectPosition(ref EnemyTag_Orange)
-                };
+                EnemyPos_Red = FindObjectPosition(ref EnemyTag_Red);
+                EnemyPos_Blue = FindObjectPosition(ref EnemyTag_Blue);
+                EnemyPos_Pink = FindObjectPosition(ref EnemyTag_Pink);
+                EnemyPos_Orange= FindObjectPosition(ref EnemyTag_Orange);
                 DoorPosition = FindObjectPosition(ref DoorTag);
 
                 LevelData.LevelPartType[][] levelMap = new LevelData.LevelPartType[LevelWidth][];
@@ -145,7 +153,8 @@ namespace PlannedRout.LevelManagment
                         levelMap[pos.x][pos.y] = type;
                 }
 
-                levelMap[DoorPosition.x][FruitPosition.y] = LevelData.LevelPartType.Door;
+                levelMap[DoorPosition.x][DoorPosition.y] = LevelData.LevelPartType.Door;
+                levelMap[FruitPosition.x][FruitPosition.y] = LevelData.LevelPartType.Fruit;
 
                 PutPositionInMap(EnergyPositions, LevelData.LevelPartType.Energy);
                 PutPositionInMap(PointsPositions, LevelData.LevelPartType.Point);
@@ -169,7 +178,10 @@ namespace PlannedRout.LevelManagment
                 levelData = new
                     (levelMap: compMap,
                     playerSpawnPoint: PlayerPosition,
-                    enemySpawnPoints: EnemiesPositions,
+                    enemySpawnPoint_Red: EnemyPos_Red,
+                    enemySpawnPoint_Blue: EnemyPos_Blue,
+                    enemySpawnPoint_Pink: EnemyPos_Pink,
+                    enemySpawnPoint_Orange: EnemyPos_Orange,
                     roomPoint: RoomPointPosition,
                     fruitSpawnPoint: FruitPosition,
                     fruitSpawnTriggers: FruitSpawnTriggers,
@@ -184,6 +196,14 @@ namespace PlannedRout.LevelManagment
         {
             var data = LevelSerialization.GetLevelDataFromFile(LevelManager.LevelEditorSerializationPath);
             LevelManager.Instance_.RegisterLevelData(data);
+
+            void PlaceObject(GameObject prefab,Vector2Int pos)
+            {
+                GameObject obj = GameObject.Instantiate(prefab, LevelLoadingData.Instance_.LevelParentObject.transform);
+                obj.transform.position = (Vector2)pos;
+            }
+            PlaceObject(LevelLoadingData.Instance_.LevelObjsPrefabs.FruitPrefab_, data.FruitSpawnPoint);
+            PlaceObject(LevelLoadingData.Instance_.LevelObjsPrefabs.RoomPointPrefab_, data.RoomPoint);
         }
 
         private void OnValidate()
