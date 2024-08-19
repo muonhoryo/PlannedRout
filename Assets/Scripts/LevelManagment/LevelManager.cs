@@ -63,7 +63,8 @@ namespace PlannedRout.LevelManagment
         }
         public bool CheckCellPosition(int row,int column)
         {
-
+            return row>=0&&row<LevelMap.Length
+                &&column>=0&&column<LevelData_.LvlMap.Height;
         }
 
         private void OnDestroy()
