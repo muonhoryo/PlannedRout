@@ -19,8 +19,11 @@ namespace PlannedRout.LevelManagment
 
         private void Awake()
         {
-            if (Instance_ != null)
+#if UNITY_EDITOR
+            if (Instance_ != null&&
+                Instance_!=this)
                 throw new System.Exception("Already have LevelLoadingData.");
+#endif
 
             Instance_ = this;
         }

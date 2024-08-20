@@ -27,44 +27,47 @@ namespace PlannedRout.LevelManagment
 
         private void Awake()
         {
-            if (Instance_ != null)
+#if UNITY_EDITOR
+            if (Instance_ != null &&
+                Instance_!=this)
                 throw new System.Exception("There is more than one LevelManager.");
+#endif
 
             Instance_ = this;
         }
 
-        public void RegisterLevelData(LevelData data)
+        public void InitializeLevel(LevelData data)
         {
+            LvlData = data;
             var loadedData = LevelLoader.LoadLevel(data);
             LevelMap=loadedData.LevelMap;
             PlayerCharacter_=loadedData.PlayerCharacter;
-            LvlData = data;
         }
         public void UnloadLevel()
         {
             LvlData = null;
             LevelMap = null;
         }
-        public void AddLevelPart(ILevelPart part,int row,int column)
+        public void AddLevelPart(ILevelPart part,int column,int row)
         {
             if (GetCell(row, column) != null)
                 throw new System.Exception("Already have part at this cell.");
 
             LevelMap[column][row] = part;
         }
-        public void RemoveLevelPart(int row,int column)
+        public void RemoveLevelPart(int column,int row)
         {
             LevelMap[column][row].RemovePart();
             LevelMap[column][row] = null;
         }
-        public ILevelPart GetCell(int row,int column)
+        public ILevelPart GetCell(int column,int row)
         {
             return LevelMap[column][row];
         }
-        public bool CheckCellPosition(int row,int column)
+        public bool CheckCellPosition(int column,int row)
         {
-            return row>=0&&row<LevelMap.Length
-                &&column>=0&&column<LevelData_.LvlMap.Height;
+            return row>=0&&row<LevelData_.LvlMap.Width
+                && column>=0&&column<LevelData_.LvlMap.Height;
         }
 
         private void OnDestroy()
@@ -196,7 +199,7 @@ namespace PlannedRout.LevelManagment
         public void LoadLevel()
         {
             var data = LevelSerialization.GetLevelDataFromFile(LevelManager.LevelEditorSerializationPath);
-            LevelManager.Instance_.RegisterLevelData(data);
+            LevelManager.Instance_.InitializeLevel(data);
 
             void PlaceObject(GameObject prefab,Vector2Int pos)
             {

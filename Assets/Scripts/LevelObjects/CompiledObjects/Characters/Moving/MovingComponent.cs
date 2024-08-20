@@ -1,5 +1,6 @@
 
 
+using System;
 using PlannedRout.LevelManagment;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ namespace PlannedRout.LevelObjects.Characters
 {
     public sealed class MovingComponent : MonoBehaviour
     {
+        public event Action<Vector2Int> ChangePositionEvent = delegate { };
+
         public enum MovingDirection:byte
         {
             Right,
@@ -14,16 +17,14 @@ namespace PlannedRout.LevelObjects.Characters
             Left,
             Bottom
         }
-        public static bool IsHorizontalDirection(MovingDirection direction) =>
-            ((byte)direction & 254) == 0;
 
         [SerializeField] private MonoBehaviour SpeedComponent;
         public ISpeedProvider SpeedProvider_ { get; private set; }
 
         public Vector2Int CurrentPosition_ { get; private set; }
         public Vector2Int TargetPosition_ { get; private set; }
-        public MovingDirection MovingDirection_ { get; private set; } = MovingDirection.Bottom;
-        private Vector2 PhysicDirection = Vector2.down;
+        public MovingDirection MovingDirection_ { get; private set; } = MovingDirection.Top;
+        private Vector2 PhysicDirection;
 
         private float stepSize;
 
@@ -36,7 +37,7 @@ namespace PlannedRout.LevelObjects.Characters
             {
                 ChangeCurrentCell();
                 SetMovingTarget();
-                if (CheckMovingPossibility())
+                if (CheckMovingPossibility(TargetPosition_))
                 {
                     Move();
                 }
@@ -56,20 +57,21 @@ namespace PlannedRout.LevelObjects.Characters
         }
         private void SetMovingTarget()
         {
-            TargetPosition_ =new Vector2Int(CurrentPosition_.x+(int)Mathf.Round(PhysicDirection.x), CurrentPosition_.y + (int)Mathf.Round(PhysicDirection.y));
+            Vector2Int physDir = PhysicDirection.GetIntegerPosition();
+            TargetPosition_ =new Vector2Int(CurrentPosition_.x+ physDir.x, CurrentPosition_.y + physDir.y);
         }
         private void ChangeCurrentCell()
         {
             if (TargetPosition_.x < 0)
             { //Teleport character to right side of map
-                transform.position = new Vector2(transform.position.x + LevelManager.Instance_.LevelData_.LvlMap.Width,
+                transform.position = new Vector2(transform.position.x + LevelManager.Instance_.LevelData_.LvlMap.Width+1,
                     transform.position.y);
 
                 CurrentPosition_ = new Vector2Int(LevelManager.Instance_.LevelData_.LvlMap.Width - 1, TargetPosition_.y);
             }
             else if (TargetPosition_.x >= LevelManager.Instance_.LevelData_.LvlMap.Width)
             { //Teleport character to left side of map
-                transform.position = new Vector2(transform.position.x - LevelManager.Instance_.LevelData_.LvlMap.Width,
+                transform.position = new Vector2(transform.position.x - LevelManager.Instance_.LevelData_.LvlMap.Width-1,
                     transform.position.y);
 
                 CurrentPosition_ = new Vector2Int(0, TargetPosition_.y);
@@ -77,14 +79,14 @@ namespace PlannedRout.LevelObjects.Characters
             else if (TargetPosition_.y < 0)
             { //Teleport character to top of map
                 transform.position = new Vector2(transform.position.x,
-                    transform.position.y + LevelManager.Instance_.LevelData_.LvlMap.Height);
+                    transform.position.y + LevelManager.Instance_.LevelData_.LvlMap.Height+1);
 
                 CurrentPosition_ = new Vector2Int(TargetPosition_.x,LevelManager.Instance_.LevelData_.LvlMap.Height- 1);
             }
             else if (TargetPosition_.y >= LevelManager.Instance_.LevelData_.LvlMap.Height)
             { //Teleport character to bottom of map
                 transform.position = new Vector2(transform.position.x,
-                    transform.position.y - LevelManager.Instance_.LevelData_.LvlMap.Height);
+                    transform.position.y - LevelManager.Instance_.LevelData_.LvlMap.Height-1);
 
                 CurrentPosition_ = new Vector2Int(TargetPosition_.x, 0);
             }
@@ -92,14 +94,16 @@ namespace PlannedRout.LevelObjects.Characters
             {
                 CurrentPosition_ = TargetPosition_;
             }
+
+            ChangePositionEvent(CurrentPosition_);
         }
-        private bool CheckMovingPossibility()
+        private bool CheckMovingPossibility(Vector2Int target)
         {
-            if(!LevelManager.Instance_.CheckCellPosition(TargetPosition_.x,TargetPosition_.y))
+            if(!LevelManager.Instance_.CheckCellPosition(target.x,target.y))
                 return true;
             else
             {
-                ILevelPart targetCell = LevelManager.Instance_.GetCell(TargetPosition_.x, TargetPosition_.y);
+                ILevelPart targetCell = LevelManager.Instance_.GetCell(target.x, target.y);
                 if (targetCell != null &&
                     (targetCell.PartType_ == ILevelPart.LevelPartType.Wall ||
                     targetCell.PartType_ == ILevelPart.LevelPartType.Door))
@@ -110,8 +114,10 @@ namespace PlannedRout.LevelObjects.Characters
                     return true;
             }
         }
+        public static bool IsHorizontalDirection(MovingDirection direction) =>
+            ((byte)direction & 1) == 0;
 
-        private void ChangeDirection(MovingDirection direction)
+        public void ChangeDirection(MovingDirection direction)
         {
             void SetDirectionAsCurrent()
             {
@@ -127,23 +133,45 @@ namespace PlannedRout.LevelObjects.Characters
                     case MovingDirection.Left:
                         PhysicDirection=Vector2.left; break;
                 }
+                SetMovingTarget();
             }
             bool CanHardChangeDirection()
             {
-                float dist = Vector2.Distance((Vector2)TargetPosition_, transform.position);
+                float dist = Vector2.Distance((Vector2)CurrentPosition_, transform.position);
                 return dist <= LevelManager.Instance_.GlobalConsts_.MaxToTargetDistanceToChangeMovDirection;
+            }
+            Vector2Int GetDirectionVector(MovingDirection direction)
+            {
+                switch (direction)
+                {
+                    case MovingDirection.Right:
+                        return Vector2Int.right;
+                    case MovingDirection.Top:
+                        return Vector2Int.up;
+                    case MovingDirection.Left:
+                        return Vector2Int.left;
+                    default:
+                        return Vector2Int.down;
+                }
             }
 
             if (MovingDirection_ != direction)
             {
-                if (IsHorizontalDirection(direction) == IsHorizontalDirection(MovingDirection_) ||
-                    CanHardChangeDirection())
+                bool isEqualHorizontality = IsHorizontalDirection(direction) == IsHorizontalDirection(MovingDirection_);
+                if (isEqualHorizontality || CanHardChangeDirection())
                 {
-                    SetDirectionAsCurrent();
-                    if (!enabled&&
-                        CheckMovingPossibility())
+                    Vector2Int newTarget = CurrentPosition_ + GetDirectionVector(direction);
+                    if (CheckMovingPossibility(newTarget))
                     {
-                        StartMoving();
+                        SetDirectionAsCurrent();
+                        if (!enabled)
+                        {
+                            StartMoving();
+                        }
+                        else if (!isEqualHorizontality)
+                        {
+                            transform.position = new Vector2(CurrentPosition_.x, CurrentPosition_.y);
+                        }
                     }
                 }
             }
@@ -163,6 +191,11 @@ namespace PlannedRout.LevelObjects.Characters
             SpeedProvider_ = SpeedComponent as ISpeedProvider;
             if (SpeedProvider_ == null)
                 throw new System.Exception("Missing speed provider.");
+        }
+        private void Start()
+        {
+            CurrentPosition_ = transform.position.GetIntegerPosition();
+            ChangeDirection(MovingDirection.Bottom);
         }
     }
 }
