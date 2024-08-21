@@ -1,5 +1,6 @@
 
 
+using PlannedRout.GameScoreManagment;
 using PlannedRout.LevelManagment;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace PlannedRout.LevelObjects
 
         protected override void PickUpAdditionAction()
         {
+            ProgressManager.Instance_.AddPoint();
             Debug.LogError("THERE SHOULD BE SPEED BUFF AND TRANSITION TO SCARING MODE OF ENEMIES.");
         }
     }

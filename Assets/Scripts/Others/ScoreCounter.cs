@@ -12,7 +12,7 @@ namespace PlannedRout
 
         private void Awake()
         {
-            ScoreManager.ScoreCountChangedEvent += ScoreCountChanged;
+            ProgressManager.ScoreCountChangedEvent += ScoreCountChanged;
         }
         private void ScoreCountChanged(int newScore)
         {

@@ -1,5 +1,6 @@
 
 
+using PlannedRout.GameScoreManagment;
 using PlannedRout.LevelManagment;
 using UnityEngine;
 
@@ -11,5 +12,10 @@ namespace PlannedRout.LevelObjects
 
         protected override int AddedScore_ => LevelManager.Instance_.GlobalConsts_.PointScore;
         public override ILevelPart.LevelPartType PartType_ => ILevelPart.LevelPartType.Point;
+
+        protected override void PickUpAdditionAction()
+        {
+            ProgressManager.Instance_.AddPoint();
+        }
     }
 }

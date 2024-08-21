@@ -5,13 +5,15 @@ using UnityEngine;
 
 namespace PlannedRout.GameScoreManagment 
 {
-    public sealed class ScoreManager:MonoBehaviour
+    public sealed class ProgressManager:MonoBehaviour
     {
         public static event Action<int> ScoreCountChangedEvent = delegate { };
+        public static event Action<int> PointCollectedEvent = delegate { };
 
-        public static ScoreManager Instance_ { get; private set; }
+        public static ProgressManager Instance_ { get; private set; }
 
         public int GameScore_ { get; private set; } = 0;
+        public int CollectedPointsCount_ { get; private set; } = 0;
 
         private void Awake()
         {
@@ -28,6 +30,11 @@ namespace PlannedRout.GameScoreManagment
 
             GameScore_ += score;
             ScoreCountChangedEvent(GameScore_);
+        }
+        public void AddPoint()
+        {
+            CollectedPointsCount_++;
+            PointCollectedEvent(CollectedPointsCount_);
         }
     }
 }

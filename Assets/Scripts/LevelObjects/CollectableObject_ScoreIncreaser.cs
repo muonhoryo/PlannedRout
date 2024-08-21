@@ -18,9 +18,10 @@ namespace PlannedRout.LevelObjects
 
         public void PickUp()
         {
-            ScoreManager.Instance_.AddScore(AddedScore_);
+            ProgressManager.Instance_.AddScore(AddedScore_);
             Vector2Int itemPos = AssociatedGameObj_.transform.position.GetIntegerPosition();
             LevelManager.Instance_.RemoveLevelPart(itemPos.x, itemPos.y);
+            PickUpAdditionAction();
         }
         public void RemovePart()
         {

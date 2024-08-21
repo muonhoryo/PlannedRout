@@ -12,5 +12,10 @@ namespace PlannedRout
         }
         public static Vector2Int GetIntegerPosition(this Vector3 position) =>
             GetIntegerPosition((Vector2)position);
+
+        public static Vector3 GetPhysicsPosition(this Vector2Int integerPosition)
+        {
+            return new Vector3(integerPosition.x, integerPosition.y, 0);
+        }
     }
 }
