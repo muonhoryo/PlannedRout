@@ -37,13 +37,19 @@ namespace PlannedRout
                 Vector2Int newPos;
                 bool CheckNextPoint()
                 {
+                    if (newPos == End)
+                    {
+                        path.Add(newPos);
+                        return true;
+                    }
+
                     if (checkedCells.Contains(newPos)||
                         !LevelManager.Instance_.CheckCellPosition(newPos.x,newPos.y))
                         return false;
 
                     checkedCells.Add(newPos);
 
-                    if (IsPassableCell(LevelManager.Instance_.GetCell(newPos.x, newPos.y).PartType_))
+                    if (IsPassableCell(LevelManager.Instance_.GetCell(newPos.x, newPos.y)))
                     {
                         path.Add(newPos);
                         bool isFound= FindCycle(newPos);
@@ -128,8 +134,8 @@ namespace PlannedRout
 
                 return false;
             }
-            bool IsPassableCell(ILevelPart.LevelPartType cellType) =>
-                cellType != ILevelPart.LevelPartType.Wall;
+            bool IsPassableCell(ILevelPart cell) =>
+                cell==null ||cell.PartType_ != ILevelPart.LevelPartType.Wall;
 
             if (FindCycle(Start))
                 Path = path;

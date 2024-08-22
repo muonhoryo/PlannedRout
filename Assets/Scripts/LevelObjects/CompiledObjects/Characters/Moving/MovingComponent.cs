@@ -15,7 +15,8 @@ namespace PlannedRout.LevelObjects.Characters
             Right,
             Top,
             Left,
-            Bottom
+            Bottom,
+            None
         }
 
         [SerializeField] private MonoBehaviour SpeedComponent;
@@ -23,7 +24,7 @@ namespace PlannedRout.LevelObjects.Characters
 
         public Vector2Int CurrentPosition_ { get; private set; }
         public Vector2Int TargetPosition_ { get; private set; }
-        public MovingDirection MovingDirection_ { get; private set; } = MovingDirection.Top;
+        public MovingDirection MovingDirection_ { get; private set; } = MovingDirection.None;
         private Vector2 PhysicDirection;
 
         private float stepSize;
@@ -150,9 +151,10 @@ namespace PlannedRout.LevelObjects.Characters
                         return Vector2Int.up;
                     case MovingDirection.Left:
                         return Vector2Int.left;
-                    default:
+                    case MovingDirection.Bottom:
                         return Vector2Int.down;
                 }
+                return Vector2Int.down;
             }
 
             if (MovingDirection_ != direction)

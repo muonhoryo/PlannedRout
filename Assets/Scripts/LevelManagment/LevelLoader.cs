@@ -73,8 +73,7 @@ namespace PlannedRout.LevelManagment
                 {
                     GameObject InstantiateObj(GameObject prefab)
                     {
-                        GameObject obj = GameObject.Instantiate(prefab, parentObj);
-                        obj.transform.position = new Vector2(x, y);
+                        GameObject obj = GameObject.Instantiate(prefab, new Vector2(x, y),Quaternion.Euler(Vector3.zero), parentObj);
                         return obj;
                     }
 

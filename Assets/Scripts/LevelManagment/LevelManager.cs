@@ -9,7 +9,9 @@ namespace PlannedRout.LevelManagment
 {
     public sealed class LevelManager : MonoBehaviour
     {
+        public static event Action LevelInitializedEvent = delegate { };
 
+        public const int EnemiesCount = 4;
         public const string LevelSerializationPath ="Level.json";
 #if UNITY_EDITOR
         public const string LevelEditorSerializationPath ="Assets/Scripts/Editor/Level.json";
@@ -42,6 +44,7 @@ namespace PlannedRout.LevelManagment
             var loadedData = LevelLoader.LoadLevel(data);
             LevelMap=loadedData.LevelMap;
             PlayerCharacter_=loadedData.PlayerCharacter;
+            LevelInitializedEvent();
         }
         public void UnloadLevel()
         {
