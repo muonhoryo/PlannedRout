@@ -83,10 +83,11 @@
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\PathFinding.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PointCollectingComponent.cs" />
     <Compile Include="Assets\Scripts\Others\FruitSpawner.cs" />
-    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\StatesControl\DispersionStateExit.cs" />
+    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PlayerDeath.cs" />
     <Compile Include="Assets\Scripts\GameTransitionManagment\GameInitialization.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Point.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Moving\SpeedComponent.cs" />
+    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\StatesControl\DispersionStateController.cs" />
     <Compile Include="Assets\Scripts\Others\TimersManager.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Wall.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Moving\MovingComponent.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\StatesControl\OnStartStatesAssigner.cs" />
     <Compile Include="Assets\Scripts\Extensions.cs" />
     <Compile Include="Assets\Scripts\Others\ScoreCounter.cs" />
+    <Compile Include="Assets\Scripts\LevelManagment\LevelReseter.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\LevelManager.cs" />
   </ItemGroup>
   <ItemGroup>

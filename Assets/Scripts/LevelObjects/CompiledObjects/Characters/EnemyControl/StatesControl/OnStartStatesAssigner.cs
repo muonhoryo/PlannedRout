@@ -44,7 +44,6 @@ namespace PlannedRout.LevelObjects.Characters
             Enemies[3].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Idle);
             Enemies[1].ChangeBehaviourStateEvent += EnemyReleased;
             ProgressManager.PointCollectedEvent += PointCollected;
-            UpdateWaiter();
             EnemyRealizationCoroutine = StartCoroutine(ReleaseNextEnemy());
         }
 
@@ -63,7 +62,8 @@ namespace PlannedRout.LevelObjects.Characters
         }
         private void UpdateWaiter()
         {
-            CoroutineWaiter = new WaitForSeconds(LevelManager.Instance_.GlobalConsts_.PlayerAFKTime);
+            StopCoroutine(EnemyRealizationCoroutine);
+            EnemyRealizationCoroutine = StartCoroutine(ReleaseNextEnemy());
         }
         private void PointCollected(int count) =>
             UpdateWaiter();
@@ -71,7 +71,7 @@ namespace PlannedRout.LevelObjects.Characters
         {
             while (true)
             {
-                yield return CoroutineWaiter;
+                yield return new WaitForSeconds(LevelManager.Instance_.GlobalConsts_.PlayerAFKTime);
                 Enemies[FreeEnemiesCount].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Dispersion);
                 UpdateWaiter();
             }

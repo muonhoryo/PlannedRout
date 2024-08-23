@@ -122,12 +122,12 @@ namespace PlannedRout.LevelManagment
             }
 
             GameObject playerObj = PlaceNoneMapObject(data.PlayerSpawnPoint, LevelLoadingData.Instance_.LevelObjsPrefabs.PlayerPrefab_);
-            PlaceNoneMapObject(data.EnemySpawnPoint_Red, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Red_);
-            PlaceNoneMapObject(data.EnemySpawnPoint_Blue, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Blue_);
-            PlaceNoneMapObject(data.EnemySpawnPoint_Pink, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Pink_);
-            PlaceNoneMapObject(data.EnemySpawnPoint_Orange, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Orange_);
+            GameObject enemyObj_red= PlaceNoneMapObject(data.EnemySpawnPoint_Red, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Red_);
+            GameObject enemyObj_blue = PlaceNoneMapObject(data.EnemySpawnPoint_Blue, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Blue_);
+            GameObject enemyObj_pink = PlaceNoneMapObject(data.EnemySpawnPoint_Pink, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Pink_);
+            GameObject enemyObj_orange = PlaceNoneMapObject(data.EnemySpawnPoint_Orange, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Orange_);
 
-            LoadedLevelData loadedData = new(map, playerObj);
+            LoadedLevelData loadedData = new(map, playerObj,enemyObj_red, enemyObj_blue, enemyObj_pink, enemyObj_orange);
             return loadedData;
         }
     }

@@ -1,7 +1,9 @@
 
 
+using System.Text;
 using PlannedRout.LevelManagment;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace PlannedRout.LevelObjects.Characters
 {
@@ -16,30 +18,66 @@ namespace PlannedRout.LevelObjects.Characters
         }
 
         [SerializeField] private DispersionTarget Target;
+        [SerializeField] private MovingComponent MovingScript;
 
-        public Vector2Int Target_ { get; private set; }
+        public Vector2Int Target_
+        {
+            get
+            {
+                if (CurrentCornerIndex == Corners.Length )
+                    CurrentCornerIndex = 0;
+                return Corners[CurrentCornerIndex++];
+            }
+        }
 
         private Vector2Int[] Corners;
         private int CurrentCornerIndex = 0;
 
         private void Awake()
         {
-            LevelManager.LevelInitializedEvent += DeferredInitialization;
+            LevelManager.LevelInitializedEvent += ReferredInitialization;
         }
-        private void DeferredInitialization()
+        private void ReferredInitialization()
         {
-            LevelManager.LevelInitializedEvent -= DeferredInitialization;
+            LevelManager.LevelInitializedEvent -= ReferredInitialization;
 
             bool isRight =((byte)Target&1)==0;
             bool isTop =((byte)Target&2)==0;
-            int targetX = isRight ? LevelManager.Instance_.LevelData_.LvlMap.Width - 2 : 1;
-            int targetY = isTop ? LevelManager.Instance_.LevelData_.LvlMap.Height - 2 : 1;
 
-            Target_ = new Vector2Int(targetX, targetY);
+            int rightBorder = LevelManager.Instance_.LevelData_.LvlMap.Width - 2;
+            int topBorder = LevelManager.Instance_.LevelData_.LvlMap.Height - 2;
+            int widthCenter= LevelManager.Instance_.LevelData_.LvlMap.Width / 2 ;
+            int heightCenter= LevelManager.Instance_.LevelData_.LvlMap.Height / 2;
+
+            Corners = new Vector2Int[4]
+            {
+                new Vector2Int(
+                    isRight ? rightBorder: 1,
+                    isTop ? topBorder: 1),
+                new Vector2Int(
+                    isRight?rightBorder:1,
+                    heightCenter),
+                new Vector2Int(
+                    widthCenter,
+                    heightCenter),
+                new Vector2Int(
+                    widthCenter,
+                    isTop?topBorder:1)
+            };
+            for(int i = 0; i < 4; i++)
+            {
+                Vector2Int cellPos = Corners[i];
+                ILevelPart cell = LevelManager.Instance_.GetCell(cellPos.x, cellPos.y);
+                if (cell!=null&&cell.PartType_ == ILevelPart.LevelPartType.Wall)
+                    Corners[i] = LevelManager.Instance_.GetNearestPassableCell(cellPos, false);
+            }
         }
 
         Vector2Int EnemyBehaviour.IEnemyBehaviourState.Target_ => Target_;
-        void EnemyBehaviour.IEnemyBehaviourState.OnStateEnter() { }
+        public void OnStateEnter() 
+        {
+            CurrentCornerIndex = MovingScript.CurrentPosition_ != Corners[0] ? 0 : 1;
+        }
         void EnemyBehaviour.IEnemyBehaviourState.OnStateExit() { }
     }
 }

@@ -20,6 +20,7 @@ namespace PlannedRout.LevelObjects.Characters
         }
 
         [SerializeField] private MonoBehaviour SpeedComponent;
+        [SerializeField] private bool IsCollideDoor=true;
         public ISpeedProvider SpeedProvider_ { get; private set; }
 
         public Vector2Int CurrentPosition_ { get; private set; }
@@ -107,7 +108,7 @@ namespace PlannedRout.LevelObjects.Characters
                 ILevelPart targetCell = LevelManager.Instance_.GetCell(target.x, target.y);
                 if (targetCell != null &&
                     (targetCell.PartType_ == ILevelPart.LevelPartType.Wall ||
-                    targetCell.PartType_ == ILevelPart.LevelPartType.Door))
+                    (IsCollideDoor &&targetCell.PartType_ == ILevelPart.LevelPartType.Door)))
                 {
                     return false;
                 }
@@ -193,6 +194,8 @@ namespace PlannedRout.LevelObjects.Characters
             SpeedProvider_ = SpeedComponent as ISpeedProvider;
             if (SpeedProvider_ == null)
                 throw new System.Exception("Missing speed provider.");
+
+            LevelReseter.LevelWasResetedEvent += Start;
         }
         private void Start()
         {

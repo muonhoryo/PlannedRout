@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using PlannedRout.LevelObjects;
 using Unity.VisualScripting;
@@ -24,6 +25,10 @@ namespace PlannedRout.LevelManagment
         public LevelData.GlobalConstData GlobalConsts_ => LevelData_.GlobalConsts;
 
         public GameObject PlayerCharacter_ { get; private set; }
+        public GameObject EnemyCharacter_Red_ { get; private set; }
+        public GameObject EnemyCharacter_Blue_ { get; private set; }
+        public GameObject EnemyCharacter_Pink_ { get; private set; }
+        public GameObject EnemyCharacter_Orange_ { get; private set; }
 
         private ILevelPart[/*columns*/][/*rows*/] LevelMap;
 
@@ -44,6 +49,10 @@ namespace PlannedRout.LevelManagment
             var loadedData = LevelLoader.LoadLevel(data);
             LevelMap=loadedData.LevelMap;
             PlayerCharacter_=loadedData.PlayerCharacter;
+            EnemyCharacter_Red_=loadedData.EnemyCharacter_Red;
+            EnemyCharacter_Blue_ = loadedData.EnemyCharacter_Blue;
+            EnemyCharacter_Pink_ = loadedData.EnemyCharacter_Pink;
+            EnemyCharacter_Orange_ = loadedData.EnemyCharacter_Orange;
             LevelInitializedEvent();
         }
         public void UnloadLevel()
@@ -71,6 +80,57 @@ namespace PlannedRout.LevelManagment
         {
             return row>=0&&row<LevelData_.LvlMap.Width
                 && column>=0&&column<LevelData_.LvlMap.Height;
+        }
+        public Vector2Int GetNearestPassableCell(Vector2Int point,bool isCollideDoor=true)
+        {
+            List<Vector2Int> checkedCells = new List<Vector2Int> { point };
+            Queue<Vector2Int> checkQueue = new Queue<Vector2Int>();
+            checkQueue.Enqueue(point);
+
+            while (checkQueue.Count!=0)
+            {
+                Vector2Int checkedCell=checkQueue.Dequeue();
+
+                Vector2Int GetRightCell() =>
+                    new Vector2Int(checkedCell.x + 1, checkedCell.y);
+                Vector2Int GetLeftCell() =>
+                    new Vector2Int(checkedCell.x - 1, checkedCell.y);
+                Vector2Int GetTopCell() =>
+                    new Vector2Int(checkedCell.x, checkedCell.y + 1);
+                Vector2Int GetBottomCell() =>
+                    new Vector2Int(checkedCell.x, checkedCell.y - 1);
+
+                bool CheckCell()
+                {
+                    ILevelPart cell = GetCell(checkedCell.x, checkedCell.y);
+                    if (cell!=null&&
+                        (cell.PartType_ == ILevelPart.LevelPartType.Wall ||
+                        (isCollideDoor && cell.PartType_ == ILevelPart.LevelPartType.Door)))
+                        return false;
+                    else
+                        return true;
+                }
+
+                if (!CheckCell())
+                {
+                    void QueueCell(Vector2Int addCell)
+                    {
+                        if (CheckCellPosition(addCell.x, addCell.y) &&
+                             !checkedCells.Contains(addCell) &&
+                             !checkQueue.Contains(addCell))
+                            checkQueue.Enqueue(addCell);
+                    }
+
+                    QueueCell(GetRightCell());
+                    QueueCell(GetLeftCell());
+                    QueueCell(GetTopCell());
+                    QueueCell(GetBottomCell());
+                    checkedCells.Add(checkedCell);
+                }
+                else
+                    return checkedCell;
+            }
+            throw new System.Exception("Invalid map or cannot finding free cell.");
         }
 
         private void OnDestroy()

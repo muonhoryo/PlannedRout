@@ -87,6 +87,10 @@ namespace PlannedRout.LevelObjects.Characters
                 if (position == Target_)
                     StartMovingToTarget();
             }
+            else if (position != PathToTarget[CurrentPathTarget-1])
+            {
+                StartMovingToTarget();
+            }
             else
             {
                 MovingScript.ChangeDirection(GetDirectionBetweenPoints(MovingScript.CurrentPosition_, PathToTarget[CurrentPathTarget]));

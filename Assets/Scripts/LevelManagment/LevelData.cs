@@ -209,11 +209,20 @@ namespace PlannedRout.LevelManagment
     {
         public ILevelPart[][] LevelMap;
         public GameObject PlayerCharacter;
+        public GameObject EnemyCharacter_Red;
+        public GameObject EnemyCharacter_Blue;
+        public GameObject EnemyCharacter_Pink;
+        public GameObject EnemyCharacter_Orange;
 
-        public LoadedLevelData(ILevelPart[][] levelMap, GameObject playerCharacter)
+        public LoadedLevelData(ILevelPart[][] levelMap, GameObject playerCharacter,GameObject enemyCharacter_red,
+            GameObject enemyCharacter_blue,GameObject enemyCharacter_pink,GameObject enemyCharacter_orange)
         {
             LevelMap = levelMap;
             PlayerCharacter = playerCharacter;
+            EnemyCharacter_Red = enemyCharacter_red;
+            EnemyCharacter_Blue = enemyCharacter_blue;
+            EnemyCharacter_Pink = enemyCharacter_pink;
+            EnemyCharacter_Orange = enemyCharacter_orange;
         }
     }
 }
