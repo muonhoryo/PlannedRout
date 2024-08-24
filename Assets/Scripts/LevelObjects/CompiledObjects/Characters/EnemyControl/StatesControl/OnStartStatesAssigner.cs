@@ -1,5 +1,6 @@
 
 using System.Collections;
+using System.Linq;
 using PlannedRout.GameScoreManagment;
 using PlannedRout.LevelManagment;
 using UnityEngine;
@@ -17,10 +18,10 @@ namespace PlannedRout.LevelObjects.Characters
         private int FreeEnemiesCount = 1;
 
         private Coroutine EnemyRealizationCoroutine;
-        private WaitForSeconds CoroutineWaiter;
 
         private void Awake()
         {
+            LevelReseter.LevelWasResetedPostEvent += ResetLevelAction;
             LevelManager.LevelInitializedEvent += ReferredInitialization;
         }
         private void ReferredInitialization()
@@ -38,13 +39,17 @@ namespace PlannedRout.LevelObjects.Characters
         private IEnumerator ReferredStart()
         {
             yield return new WaitForEndOfFrame();
+            ActivateEnemiesRealization();
+            ProgressManager.PointCollectedEvent += PointCollected;
+            EnemyRealizationCoroutine = StartCoroutine(ReleaseNextEnemy());
+        }
+        private void ActivateEnemiesRealization()
+        {
             Enemies[0].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Dispersion);
             Enemies[1].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Idle);
             Enemies[2].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Idle);
             Enemies[3].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Idle);
             Enemies[1].ChangeBehaviourStateEvent += EnemyReleased;
-            ProgressManager.PointCollectedEvent += PointCollected;
-            EnemyRealizationCoroutine = StartCoroutine(ReleaseNextEnemy());
         }
 
         private void EnemyReleased(EnemyBehaviour.BehaviourStateType i)
@@ -53,7 +58,7 @@ namespace PlannedRout.LevelObjects.Characters
             FreeEnemiesCount++;
             if (FreeEnemiesCount >= 4)
             {
-                StopCoroutine(EnemyRealizationCoroutine);
+                StopRealization();
             }
             else
             {
@@ -62,7 +67,8 @@ namespace PlannedRout.LevelObjects.Characters
         }
         private void UpdateWaiter()
         {
-            StopCoroutine(EnemyRealizationCoroutine);
+            if(EnemyRealizationCoroutine!=null)
+                StopCoroutine(EnemyRealizationCoroutine);
             EnemyRealizationCoroutine = StartCoroutine(ReleaseNextEnemy());
         }
         private void PointCollected(int count) =>
@@ -73,8 +79,27 @@ namespace PlannedRout.LevelObjects.Characters
             {
                 yield return new WaitForSeconds(LevelManager.Instance_.GlobalConsts_.PlayerAFKTime);
                 Enemies[FreeEnemiesCount].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Dispersion);
-                UpdateWaiter();
             }
+        }
+        private void StopRealization()
+        {
+            StopCoroutine(EnemyRealizationCoroutine);
+            ProgressManager.PointCollectedEvent -= PointCollected;
+        }
+
+        private void ResetLevelAction()
+        {
+            if (FreeEnemiesCount < 4)
+            {
+                Enemies[FreeEnemiesCount].ChangeBehaviourStateEvent -= EnemyReleased;
+            }
+            else
+            {
+                ProgressManager.PointCollectedEvent += PointCollected;
+            }
+            FreeEnemiesCount = 1;
+            ActivateEnemiesRealization();
+            UpdateWaiter();
         }
     }
 }

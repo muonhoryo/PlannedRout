@@ -17,6 +17,8 @@ namespace PlannedRout.LevelObjects.Characters
         private void Awake()
         {
             Owner.ChangeBehaviourStateEvent += StateChanged;
+
+            LevelReseter.LevelWasResetedEvent += ResetLevelAction;
         }
         private void StateChanged(EnemyBehaviour.BehaviourStateType type)
         {
@@ -41,6 +43,13 @@ namespace PlannedRout.LevelObjects.Characters
         {
             yield return new WaitForSeconds(LevelManager.Instance_.GlobalConsts_.NextDispersionTime);
             Owner.SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Dispersion);
+        }
+
+        private void ResetLevelAction()
+        {
+            if(ActiveCoroutine!=null)
+                StopCoroutine(ActiveCoroutine);
+            DispersionEntersCount = 0;
         }
     }
 }

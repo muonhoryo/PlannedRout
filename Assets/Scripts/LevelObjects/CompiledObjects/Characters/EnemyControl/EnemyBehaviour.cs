@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using PlannedRout.LevelManagment;
 using UnityEngine;
 
 namespace PlannedRout.LevelObjects.Characters
@@ -64,6 +65,7 @@ namespace PlannedRout.LevelObjects.Characters
                 throw new System.Exception("Missing MovingComponent.");
 
             MovingScript.ChangePositionEvent += ChangePositionAction;
+            LevelReseter.LevelWasResetedEvent += ResetLevelAction; 
         }
         public IEnemyBehaviourState CurrentState_ { get;private set; }
         public Vector2Int Target_ { get; private set; }
@@ -113,11 +115,17 @@ namespace PlannedRout.LevelObjects.Characters
 
         public void StartMovingToTarget()
         {
-            Target_ = CurrentState_.Target_;
-            PathFinding pathFinding = new PathFinding(MovingScript.CurrentPosition_, Target_);
-            pathFinding.FindPath();
-            PathToTarget = pathFinding.Path;
-            CurrentPathTarget = 1;
+            void SelectTargetFromState()
+            {
+                Target_ = CurrentState_.Target_;
+                PathFinding pathFinding = new PathFinding(MovingScript.CurrentPosition_, Target_);
+                pathFinding.FindPath();
+                PathToTarget = pathFinding.Path;
+                CurrentPathTarget = 1;
+                if (PathToTarget == null)
+                    SelectTargetFromState(); 
+            }
+            SelectTargetFromState();
 
             MovingScript.ChangeDirection(GetDirectionBetweenPoints(MovingScript.CurrentPosition_, PathToTarget[CurrentPathTarget]));
             CurrentPathTarget++;
@@ -145,5 +153,9 @@ namespace PlannedRout.LevelObjects.Characters
             ChangeBehaviourStateEvent(stateType);
         }
 
+        private void ResetLevelAction()
+        {
+            SelectBehaviourState(BehaviourStateType.Idle);
+        }
     }
 }

@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Fruit.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\States\DispersionBehaviourState.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\ICollectableObject.cs" />
+    <Compile Include="Assets\Scripts\DEBUGONLY\LifeCounter.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Door.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Moving\PlayerSpeedComponent.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\EnemyBehaviour.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Assets\Scripts\GameTransitionManagment\GameInitialization.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Point.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Moving\SpeedComponent.cs" />
+    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyDeathBringing.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\StatesControl\DispersionStateController.cs" />
     <Compile Include="Assets\Scripts\Others\TimersManager.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Wall.cs" />

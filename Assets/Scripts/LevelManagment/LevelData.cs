@@ -39,6 +39,7 @@ namespace PlannedRout.LevelManagment
             public int PlayerLifeCount;
             public float EnemyScoreModifier;
             public float MaxToTargetDistanceToChangeMovDirection;
+            public float MinDistanceToPlayerDeath;
             //Given score
             public int FruitScore;
             public int PointScore;
@@ -67,6 +68,7 @@ namespace PlannedRout.LevelManagment
                                    int playerLifeCount,
                                    float enemyScoreModifier,
                                    float maxToTargetDistanceToChangeMovDirection,
+                                   float minDistanceToPlayerDeath,
                                    int fruitScore,
                                    int pointScore,
                                    int energyScore,
@@ -94,6 +96,7 @@ namespace PlannedRout.LevelManagment
                 PlayerLifeCount = playerLifeCount;
                 EnemyScoreModifier = enemyScoreModifier;
                 MaxToTargetDistanceToChangeMovDirection = maxToTargetDistanceToChangeMovDirection;
+                MinDistanceToPlayerDeath = minDistanceToPlayerDeath;
                 FruitScore = fruitScore;
                 PointScore = pointScore;
                 EnergyScore = energyScore;

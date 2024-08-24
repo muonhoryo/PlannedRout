@@ -78,8 +78,8 @@ namespace PlannedRout.LevelManagment
         }
         public bool CheckCellPosition(int column,int row)
         {
-            return row>=0&&row<LevelData_.LvlMap.Width
-                && column>=0&&column<LevelData_.LvlMap.Height;
+            return row>=0&&row<LevelData_.LvlMap.Height
+                && column>=0&&column<LevelData_.LvlMap.Width;
         }
         public Vector2Int GetNearestPassableCell(Vector2Int point,bool isCollideDoor=true)
         {
@@ -118,7 +118,9 @@ namespace PlannedRout.LevelManagment
                         if (CheckCellPosition(addCell.x, addCell.y) &&
                              !checkedCells.Contains(addCell) &&
                              !checkQueue.Contains(addCell))
+                        {
                             checkQueue.Enqueue(addCell);
+                        }
                     }
 
                     QueueCell(GetRightCell());
@@ -130,6 +132,7 @@ namespace PlannedRout.LevelManagment
                 else
                     return checkedCell;
             }
+            Debug.LogError(point);
             throw new System.Exception("Invalid map or cannot finding free cell.");
         }
 

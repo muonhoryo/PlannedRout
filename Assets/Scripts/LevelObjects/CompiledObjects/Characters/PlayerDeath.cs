@@ -1,5 +1,6 @@
 
 
+using System;
 using PlannedRout.LevelManagment;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,8 @@ namespace PlannedRout
 {
     public sealed class PlayerDeath : MonoBehaviour
     {
+        public static event Action<int> LifeCountDecreasedEvent = delegate { };
+
         [SerializeField] private string MainMenuSceneName;
 
         public int RemainedLifesCount_ { get; private set; }
@@ -37,6 +40,7 @@ namespace PlannedRout
         private void ResetGame()
         {
             LevelReseter.Reset();
+            LifeCountDecreasedEvent(RemainedLifesCount_);
         }
     }
 }

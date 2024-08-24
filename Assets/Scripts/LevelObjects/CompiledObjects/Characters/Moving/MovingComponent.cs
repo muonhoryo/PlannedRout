@@ -121,6 +121,23 @@ namespace PlannedRout.LevelObjects.Characters
 
         public void ChangeDirection(MovingDirection direction)
         {
+            if (MovingDirection_ != direction)
+            {
+                bool CanHardChangeDirection()
+                {
+                    float dist = Vector2.Distance((Vector2)CurrentPosition_, transform.position);
+                    return dist <= LevelManager.Instance_.GlobalConsts_.MaxToTargetDistanceToChangeMovDirection;
+                }
+
+                bool isEqualHorizontality = IsHorizontalDirection(direction) == IsHorizontalDirection(MovingDirection_);
+                if (isEqualHorizontality || CanHardChangeDirection())
+                {
+                    InternalChangeDirection(direction, isEqualHorizontality);
+                }
+            }
+        }
+        private void InternalChangeDirection(MovingDirection direction,bool isEqualHorizontality)
+        {
             void SetDirectionAsCurrent()
             {
                 MovingDirection_ = direction;
@@ -133,14 +150,9 @@ namespace PlannedRout.LevelObjects.Characters
                     case MovingDirection.Bottom:
                         PhysicDirection = Vector2.down; break;
                     case MovingDirection.Left:
-                        PhysicDirection=Vector2.left; break;
+                        PhysicDirection = Vector2.left; break;
                 }
                 SetMovingTarget();
-            }
-            bool CanHardChangeDirection()
-            {
-                float dist = Vector2.Distance((Vector2)CurrentPosition_, transform.position);
-                return dist <= LevelManager.Instance_.GlobalConsts_.MaxToTargetDistanceToChangeMovDirection;
             }
             Vector2Int GetDirectionVector(MovingDirection direction)
             {
@@ -158,24 +170,17 @@ namespace PlannedRout.LevelObjects.Characters
                 return Vector2Int.down;
             }
 
-            if (MovingDirection_ != direction)
+            Vector2Int newTarget = CurrentPosition_ + GetDirectionVector(direction);
+            if (CheckMovingPossibility(newTarget))
             {
-                bool isEqualHorizontality = IsHorizontalDirection(direction) == IsHorizontalDirection(MovingDirection_);
-                if (isEqualHorizontality || CanHardChangeDirection())
+                SetDirectionAsCurrent();
+                if (!enabled)
                 {
-                    Vector2Int newTarget = CurrentPosition_ + GetDirectionVector(direction);
-                    if (CheckMovingPossibility(newTarget))
-                    {
-                        SetDirectionAsCurrent();
-                        if (!enabled)
-                        {
-                            StartMoving();
-                        }
-                        else if (!isEqualHorizontality)
-                        {
-                            transform.position = new Vector2(CurrentPosition_.x, CurrentPosition_.y);
-                        }
-                    }
+                    StartMoving();
+                }
+                else if (!isEqualHorizontality)
+                {
+                    transform.position = new Vector2(CurrentPosition_.x, CurrentPosition_.y);
                 }
             }
         }
@@ -200,7 +205,7 @@ namespace PlannedRout.LevelObjects.Characters
         private void Start()
         {
             CurrentPosition_ = transform.position.GetIntegerPosition();
-            ChangeDirection(MovingDirection.Bottom);
+            InternalChangeDirection(MovingDirection.Bottom,true);
         }
     }
 }

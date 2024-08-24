@@ -8,6 +8,7 @@ namespace PlannedRout.LevelManagment
     public static class LevelReseter
     {
         public static event Action LevelWasResetedEvent = delegate { };
+        public static event Action LevelWasResetedPostEvent = delegate { };
 
         public static void Reset()
         {
@@ -22,6 +23,7 @@ namespace PlannedRout.LevelManagment
             LevelManager.Instance_.EnemyCharacter_Pink_.transform.position = new Vector2(enemyPos_pink.x, enemyPos_orange.y);
             LevelManager.Instance_.EnemyCharacter_Orange_.transform.position = new Vector2(enemyPos_orange.x, enemyPos_orange.y);
             LevelWasResetedEvent();
+            LevelWasResetedPostEvent();
         }
     }
 }
