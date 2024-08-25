@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using PlannedRout.LevelObjects;
+using PlannedRout.LevelObjects.Characters;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -29,6 +31,7 @@ namespace PlannedRout.LevelManagment
         public GameObject EnemyCharacter_Blue_ { get; private set; }
         public GameObject EnemyCharacter_Pink_ { get; private set; }
         public GameObject EnemyCharacter_Orange_ { get; private set; }
+        public int OnLevelPointCount_ { get; private set; }
 
         private ILevelPart[/*columns*/][/*rows*/] LevelMap;
 
@@ -53,6 +56,7 @@ namespace PlannedRout.LevelManagment
             EnemyCharacter_Blue_ = loadedData.EnemyCharacter_Blue;
             EnemyCharacter_Pink_ = loadedData.EnemyCharacter_Pink;
             EnemyCharacter_Orange_ = loadedData.EnemyCharacter_Orange;
+            OnLevelPointCount_ = loadedData.OnLevelPointsCount;
             LevelInitializedEvent();
         }
         public void UnloadLevel()
@@ -135,6 +139,110 @@ namespace PlannedRout.LevelManagment
             Debug.LogError(point);
             throw new System.Exception("Invalid map or cannot finding free cell.");
         }
+        public Vector2Int GetFarthestCellAtDirection(Vector2Int origin,MovingComponent.MovingDirection direction,
+            bool collideDoor=false)
+        {
+            Vector2Int NullResult()=>-Vector2Int.one;
+
+            if (!CheckCellPosition(origin.x, origin.y))
+                return NullResult();
+
+            bool CheckCell(Vector2Int cellPos)
+            {
+                ILevelPart cell = GetCell(cellPos.x,cellPos.y);
+
+                return cell == null ||
+                    (cell.PartType_ != ILevelPart.LevelPartType.Wall &&
+                    (!collideDoor || cell.PartType_ != ILevelPart.LevelPartType.Door));
+            }
+
+            Vector2Int GetRight()
+            {
+                Vector2Int pos;
+                Vector2Int prevPos= NullResult();
+                for(int i=origin.x+1;i<LevelData_.LvlMap.Width;i++) 
+                {
+                    pos = new Vector2Int(i, origin.y);
+                    if (!CheckCell(pos))
+                    {
+                        if (i == origin.x + 1)
+                            return NullResult();
+                        else
+                            return prevPos;
+                    }
+                    prevPos = pos;
+                }
+                return NullResult();
+            }
+            Vector2Int GetTop()
+            {
+                Vector2Int pos;
+                Vector2Int prevPos = NullResult();
+                for (int i = origin.y + 1; i < LevelData_.LvlMap.Height; i++)
+                {
+                    pos = new Vector2Int(origin.x, i);
+                    if (!CheckCell(pos))
+                    {
+                        if (i == origin.y+1)
+                            return NullResult();
+                        else
+                            return prevPos;
+                    }
+                    prevPos = pos;
+                }
+                return NullResult();
+            }
+            Vector2Int GetLeft()
+            {
+                Vector2Int pos;
+                Vector2Int prevPos = NullResult();
+                for (int i = origin.x - 1; i >=0; i--)
+                {
+                    pos = new Vector2Int(i, origin.y);
+                    if (!CheckCell(pos))
+                    {
+                        if (i == origin.x-1)
+                            return NullResult();
+                        else
+                            return prevPos;
+                    }
+                    prevPos = pos;
+                }
+                return NullResult();
+            }
+            Vector2Int GetBottom()
+            {
+                Vector2Int pos;
+                Vector2Int prevPos = NullResult();
+                for (int i = origin.y - 1; i >= 0; i--)
+                {
+                    pos = new Vector2Int(origin.x, i);
+                    if (!CheckCell(pos))
+                    {
+                        if (i == origin.y-1)
+                            return NullResult();
+                        else
+                            return prevPos;
+                    }
+                    prevPos = pos;
+                }
+                return NullResult();
+            }
+
+            switch (direction) 
+            {
+                case MovingComponent.MovingDirection.Right:
+                    return GetRight();
+                case MovingComponent.MovingDirection.Left:
+                    return GetLeft();
+                case MovingComponent.MovingDirection.Top:
+                    return GetTop();
+                case MovingComponent.MovingDirection.Bottom:
+                    return GetBottom();
+                default:
+                    return -Vector2Int.one;
+            }
+        } 
 
         private void OnDestroy()
         {
@@ -274,6 +382,14 @@ namespace PlannedRout.LevelManagment
             }
             PlaceObject(LevelLoadingData.Instance_.LevelObjsPrefabs.FruitPrefab_, data.FruitSpawnPoint);
             PlaceObject(LevelLoadingData.Instance_.LevelObjsPrefabs.RoomPointPrefab_, data.RoomPoint);
+        }
+
+        [ContextMenu("ResetLevel")]
+        public void ResetLevel()
+        {
+            foreach (var ch in LevelLoadingData.Instance_.LevelParentObject.GetComponentsInChildren<Transform>(true))
+                if(ch!=null&&ch.gameObject!=LevelLoadingData.Instance_.LevelParentObject)
+                    DestroyImmediate(ch.gameObject);
         }
 
         private void OnValidate()

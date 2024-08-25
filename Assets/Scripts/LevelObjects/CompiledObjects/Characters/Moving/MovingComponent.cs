@@ -9,6 +9,7 @@ namespace PlannedRout.LevelObjects.Characters
     public sealed class MovingComponent : MonoBehaviour
     {
         public event Action<Vector2Int> ChangePositionEvent = delegate { };
+        public event Action TunnelTransitionEvent = delegate { };
 
         public enum MovingDirection:byte
         {
@@ -70,6 +71,7 @@ namespace PlannedRout.LevelObjects.Characters
                     transform.position.y);
 
                 CurrentPosition_ = new Vector2Int(LevelManager.Instance_.LevelData_.LvlMap.Width - 1, TargetPosition_.y);
+                TunnelTransitionEvent();
             }
             else if (TargetPosition_.x >= LevelManager.Instance_.LevelData_.LvlMap.Width)
             { //Teleport character to left side of map
@@ -77,6 +79,7 @@ namespace PlannedRout.LevelObjects.Characters
                     transform.position.y);
 
                 CurrentPosition_ = new Vector2Int(0, TargetPosition_.y);
+                TunnelTransitionEvent();
             }
             else if (TargetPosition_.y < 0)
             { //Teleport character to top of map
@@ -84,6 +87,7 @@ namespace PlannedRout.LevelObjects.Characters
                     transform.position.y + LevelManager.Instance_.LevelData_.LvlMap.Height+1);
 
                 CurrentPosition_ = new Vector2Int(TargetPosition_.x,LevelManager.Instance_.LevelData_.LvlMap.Height- 1);
+                TunnelTransitionEvent();
             }
             else if (TargetPosition_.y >= LevelManager.Instance_.LevelData_.LvlMap.Height)
             { //Teleport character to bottom of map
@@ -91,6 +95,7 @@ namespace PlannedRout.LevelObjects.Characters
                     transform.position.y - LevelManager.Instance_.LevelData_.LvlMap.Height-1);
 
                 CurrentPosition_ = new Vector2Int(TargetPosition_.x, 0);
+                TunnelTransitionEvent();
             }
             else
             {

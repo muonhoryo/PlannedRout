@@ -17,6 +17,8 @@ namespace PlannedRout.LevelManagment
             public float EnemyDispersionTime;
             public float PlayerAFKTime;
             public float NextDispersionTime;
+            public float PointEatingDebuffTime;
+            public float TunnelTransitionDebuffTime;
             //Speed buffs
             public float EnergyPlayerSpeedMod;
             public float EnemyPointEatingSpeedMod;
@@ -51,6 +53,8 @@ namespace PlannedRout.LevelManagment
                                    float enemyDispersionTime,
                                    float playerAFKTime,
                                    float nextDispersionTime,
+                                   float pointEatingDebuffTime,
+                                   float tunnelTransitionDebuffTime,
                                    float energyPlayerSpeedMod,
                                    float enemyPointEatingSpeedMod,
                                    float enemyHomeBackSpeedMod,
@@ -79,6 +83,8 @@ namespace PlannedRout.LevelManagment
                 EnemyDispersionTime = enemyDispersionTime;
                 PlayerAFKTime = playerAFKTime;
                 NextDispersionTime = nextDispersionTime;
+                PointEatingDebuffTime = pointEatingDebuffTime;
+                TunnelTransitionDebuffTime = tunnelTransitionDebuffTime;
                 EnergyPlayerSpeedMod = energyPlayerSpeedMod;
                 EnemyPointEatingSpeedMod = enemyPointEatingSpeedMod;
                 EnemyHomeBackSpeedMod = enemyHomeBackSpeedMod;
@@ -216,9 +222,11 @@ namespace PlannedRout.LevelManagment
         public GameObject EnemyCharacter_Blue;
         public GameObject EnemyCharacter_Pink;
         public GameObject EnemyCharacter_Orange;
+        public int OnLevelPointsCount;
 
         public LoadedLevelData(ILevelPart[][] levelMap, GameObject playerCharacter,GameObject enemyCharacter_red,
-            GameObject enemyCharacter_blue,GameObject enemyCharacter_pink,GameObject enemyCharacter_orange)
+            GameObject enemyCharacter_blue,GameObject enemyCharacter_pink,GameObject enemyCharacter_orange,
+            int onLevelPointsCount)
         {
             LevelMap = levelMap;
             PlayerCharacter = playerCharacter;
@@ -226,6 +234,7 @@ namespace PlannedRout.LevelManagment
             EnemyCharacter_Blue = enemyCharacter_blue;
             EnemyCharacter_Pink = enemyCharacter_pink;
             EnemyCharacter_Orange = enemyCharacter_orange;
+            OnLevelPointsCount = onLevelPointsCount;
         }
     }
 }

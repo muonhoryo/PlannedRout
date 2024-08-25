@@ -68,6 +68,8 @@ namespace PlannedRout.LevelManagment
 
             Transform parentObj = LevelLoadingData.Instance_.LevelParentObject.transform;
 
+            int onLevelPointsCount = 0;
+
             for (int x = 0; x < data.LvlMap.Width; x++)
                 for(int y=0;y < data.LvlMap.Height; y++)
                 {
@@ -92,12 +94,14 @@ namespace PlannedRout.LevelManagment
                             {
                                 GameObject pointObj = InstantiateObj(LevelLoadingData.Instance_.LevelObjsPrefabs.PointPrefab_);
                                 map[x][y] = new Point(pointObj);
+                                onLevelPointsCount++;
                                 break;
                             }
                         case LevelData.LevelPartType.Energy:
                             {
                                 GameObject energyObj = InstantiateObj(LevelLoadingData.Instance_.LevelObjsPrefabs.EnergyPrefab_);
                                 map[x][y] = new Energy(energyObj);
+                                onLevelPointsCount++;
                                 break;
                             }
                         case LevelData.LevelPartType.Door:
@@ -127,7 +131,7 @@ namespace PlannedRout.LevelManagment
             GameObject enemyObj_pink = PlaceNoneMapObject(data.EnemySpawnPoint_Pink, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Pink_);
             GameObject enemyObj_orange = PlaceNoneMapObject(data.EnemySpawnPoint_Orange, LevelLoadingData.Instance_.LevelObjsPrefabs.EnemyPrefab_Orange_);
 
-            LoadedLevelData loadedData = new(map, playerObj,enemyObj_red, enemyObj_blue, enemyObj_pink, enemyObj_orange);
+            LoadedLevelData loadedData = new(map, playerObj,enemyObj_red, enemyObj_blue, enemyObj_pink, enemyObj_orange,onLevelPointsCount);
             return loadedData;
         }
     }

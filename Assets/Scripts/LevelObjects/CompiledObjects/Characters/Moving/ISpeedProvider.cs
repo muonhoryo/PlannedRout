@@ -6,6 +6,6 @@ namespace PlannedRout.LevelObjects.Characters
 {
     public interface ISpeedProvider 
     {
-        public CompositeParameter<float> Speed_ { get; }
+        public CompositeFloat Speed_ { get; }
     }
 }
