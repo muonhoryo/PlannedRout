@@ -9,10 +9,7 @@ namespace PlannedRout.LevelObjects
     {
         [SerializeField] private GameObject WallPrefab;
         [SerializeField] private GameObject PointPrefab;
-        [SerializeField] private GameObject EnergyPrefab;
-        [SerializeField] private GameObject FruitPrefab;
         [SerializeField] private GameObject DoorPrefab;
-        [SerializeField] private GameObject RoomPointPrefab;
         [SerializeField] private GameObject PlayerPrefab;
         [SerializeField] private GameObject EnemyPrefab_Red;
         [SerializeField] private GameObject EnemyPrefab_Pink;
@@ -21,10 +18,7 @@ namespace PlannedRout.LevelObjects
 
         public GameObject WallPrefab_ =>WallPrefab;
         public GameObject PointPrefab_ =>PointPrefab;
-        public GameObject EnergyPrefab_ =>EnergyPrefab;
-        public GameObject FruitPrefab_ =>FruitPrefab;
         public GameObject DoorPrefab_ =>DoorPrefab;
-        public GameObject RoomPointPrefab_ =>RoomPointPrefab;
         public GameObject PlayerPrefab_ =>PlayerPrefab;
         public GameObject EnemyPrefab_Red_ =>EnemyPrefab_Red;
         public GameObject EnemyPrefab_Pink_ =>EnemyPrefab_Pink;

@@ -16,6 +16,10 @@ namespace PlannedRout.LevelObjects.Characters
         {
             SubscribeEventAction();
         }
+        private void OnDestroy()
+        {
+            UnsubscribeEventAction();
+        }
         protected void SpeedModificationEventAction()
         {
             if (CurrentSlowdown == null)
@@ -47,5 +51,6 @@ namespace PlannedRout.LevelObjects.Characters
         protected abstract float SpeedMod_ { get; }
         protected abstract float SpeedModDuration_ { get; }
         protected abstract void SubscribeEventAction();
+        protected abstract void UnsubscribeEventAction();
     }
 }

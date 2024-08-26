@@ -20,9 +20,6 @@ namespace PlannedRout.LevelObjects.Characters
         public enum BehaviourStateType:byte
         {
             Dispersion,
-            Persecution,
-            Scaring,
-            BackHome,
             Idle
         }
 
@@ -30,9 +27,6 @@ namespace PlannedRout.LevelObjects.Characters
         public event Action<Vector2Int> TargetIsAchievedEvent = delegate { };
 
         [SerializeField] private MonoBehaviour DispersionBehaviourStateComponent;
-        [SerializeField] private MonoBehaviour PersecutionBehaviourStateComponent;
-        [SerializeField] private MonoBehaviour ScaringBehaviourStateComponent;
-        [SerializeField] private MonoBehaviour BackHomeBehaviourStateComponent;
         [SerializeField] private MonoBehaviour IdleBehaviourStateComponent;
 
         private IEnemyBehaviourState DispersionBehaviourState;
@@ -48,15 +42,6 @@ namespace PlannedRout.LevelObjects.Characters
             DispersionBehaviourState = DispersionBehaviourStateComponent as IEnemyBehaviourState;
             if (DispersionBehaviourState == null)
                 throw new System.Exception("Incorrect behaviour state: Dispersion");
-            PersecutionBehaviourState= PersecutionBehaviourStateComponent as IEnemyBehaviourState;
-            if (PersecutionBehaviourState == null)
-                throw new System.Exception("Incorrect behaviour state: Persecution");
-            ScaringBehaviourState= ScaringBehaviourStateComponent as IEnemyBehaviourState;
-            if (ScaringBehaviourState == null)
-                throw new System.Exception("Incorrect behaviour state: Scaring");
-            BackHomeBehaviourState= BackHomeBehaviourStateComponent as IEnemyBehaviourState;
-            if (BackHomeBehaviourState == null)
-                throw new System.Exception("Incorrect behaviour state: BackHome");
             IdleBehaviourState = IdleBehaviourStateComponent as IEnemyBehaviourState;
             if (IdleBehaviourState == null)
                 throw new System.Exception("Incorrect behaviour state: Idle");
@@ -65,7 +50,6 @@ namespace PlannedRout.LevelObjects.Characters
                 throw new System.Exception("Missing MovingComponent.");
 
             MovingScript.ChangePositionEvent += ChangePositionAction;
-            LevelReseter.LevelWasResetedEvent += ResetLevelAction; 
         }
         public IEnemyBehaviourState CurrentState_ { get;private set; }
         public Vector2Int Target_ { get; private set; }
@@ -137,25 +121,11 @@ namespace PlannedRout.LevelObjects.Characters
                 case BehaviourStateType.Dispersion:
                     SetBehaviourState(DispersionBehaviourState);
                     break;
-                case BehaviourStateType.Persecution:
-                    SetBehaviourState(PersecutionBehaviourState);
-                    break;
-                case BehaviourStateType.Scaring:
-                    SetBehaviourState(ScaringBehaviourState);
-                    break;
-                case BehaviourStateType.BackHome:
-                    SetBehaviourState(BackHomeBehaviourState);
-                    break;
                 case BehaviourStateType.Idle:
                     SetBehaviourState(IdleBehaviourState);
                     break;
             }
             ChangeBehaviourStateEvent(stateType);
-        }
-
-        private void ResetLevelAction()
-        {
-            SelectBehaviourState(BehaviourStateType.Idle);
         }
     }
 }

@@ -21,7 +21,6 @@ namespace PlannedRout.LevelObjects.Characters
 
         private void Awake()
         {
-            LevelReseter.LevelWasResetedPostEvent += ResetLevelAction;
             LevelManager.LevelInitializedEvent += ReferredInitialization;
         }
         private void ReferredInitialization()
@@ -85,21 +84,6 @@ namespace PlannedRout.LevelObjects.Characters
         {
             StopCoroutine(EnemyRealizationCoroutine);
             ProgressManager.PointCollectedEvent -= PointCollected;
-        }
-
-        private void ResetLevelAction()
-        {
-            if (FreeEnemiesCount < 4)
-            {
-                Enemies[FreeEnemiesCount].ChangeBehaviourStateEvent -= EnemyReleased;
-            }
-            else
-            {
-                ProgressManager.PointCollectedEvent += PointCollected;
-            }
-            FreeEnemiesCount = 1;
-            ActivateEnemiesRealization();
-            UpdateWaiter();
         }
     }
 }

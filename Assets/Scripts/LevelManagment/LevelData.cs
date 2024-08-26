@@ -12,101 +12,48 @@ namespace PlannedRout.LevelManagment
         public struct GlobalConstData
         {
             //Times
-            public float FruitDestroyingTime;
-            public float EnergyBuffTime;
-            public float EnemyDispersionTime;
             public float PlayerAFKTime;
-            public float NextDispersionTime;
             public float PointEatingDebuffTime;
-            public float TunnelTransitionDebuffTime;
             //Speed buffs
-            public float EnergyPlayerSpeedMod;
             public float EnemyPointEatingSpeedMod;
-            public float EnemyHomeBackSpeedMod;
-            public float RedSpecialSpeedMod;
             //Speed debuffs
             public float PlayerPointEatingSpeedMod;
-            public float EnemyDispersionSpeedMod;
-            public float EnemyTunnelSpeedMod;
-            public float EnemyScaringSpeedMod;
             //Speed
             public float PlayerSpeed;
             public float EnemySpeed;
             //Point values
             public int EnemySpeedBuffPointValue;
-            public int RedSpeedBuffPointValue;
             public int NextRoomExitPointValue;
             //Others
-            public int MaxDispersionCount;
-            public int PlayerLifeCount;
-            public float EnemyScoreModifier;
             public float MaxToTargetDistanceToChangeMovDirection;
             public float MinDistanceToPlayerDeath;
             //Given score
-            public int FruitScore;
             public int PointScore;
-            public int EnergyScore;
-            public int EnemyScore;
 
-            public GlobalConstData(float fruitDestroyingTime,
-                                   float energyBuffTime,
-                                   float enemyDispersionTime,
+            public GlobalConstData(
                                    float playerAFKTime,
-                                   float nextDispersionTime,
                                    float pointEatingDebuffTime,
-                                   float tunnelTransitionDebuffTime,
-                                   float energyPlayerSpeedMod,
                                    float enemyPointEatingSpeedMod,
-                                   float enemyHomeBackSpeedMod,
-                                   float redSpecialSpeedMod,
                                    float playerPointEatingSpeedMod,
-                                   float enemyDispersionSpeedMod,
-                                   float enemyTunnelSpeedMod,
-                                   float enemyScaringSpeedMod,
                                    float playerSpeed,
                                    float enemySpeed,
                                    int enemySpeedBuffPointValue,
-                                   int redSpeedBuffPointValue,
                                    int nextRoomExitPointValue,
-                                   int maxDispersionCount,
-                                   int playerLifeCount,
-                                   float enemyScoreModifier,
                                    float maxToTargetDistanceToChangeMovDirection,
                                    float minDistanceToPlayerDeath,
-                                   int fruitScore,
-                                   int pointScore,
-                                   int energyScore,
-                                   int enemyScore)
+                                   int pointScore)
             {
-                FruitDestroyingTime = fruitDestroyingTime;
-                EnergyBuffTime = energyBuffTime;
-                EnemyDispersionTime = enemyDispersionTime;
                 PlayerAFKTime = playerAFKTime;
-                NextDispersionTime = nextDispersionTime;
                 PointEatingDebuffTime = pointEatingDebuffTime;
-                TunnelTransitionDebuffTime = tunnelTransitionDebuffTime;
-                EnergyPlayerSpeedMod = energyPlayerSpeedMod;
                 EnemyPointEatingSpeedMod = enemyPointEatingSpeedMod;
-                EnemyHomeBackSpeedMod = enemyHomeBackSpeedMod;
-                RedSpecialSpeedMod = redSpecialSpeedMod;
                 PlayerPointEatingSpeedMod = playerPointEatingSpeedMod;
-                EnemyDispersionSpeedMod = enemyDispersionSpeedMod;
-                EnemyTunnelSpeedMod = enemyTunnelSpeedMod;
-                EnemyScaringSpeedMod = enemyScaringSpeedMod;
                 PlayerSpeed = playerSpeed;
                 EnemySpeed = enemySpeed;
                 EnemySpeedBuffPointValue = enemySpeedBuffPointValue;
-                RedSpeedBuffPointValue = redSpeedBuffPointValue;
                 NextRoomExitPointValue = nextRoomExitPointValue;
-                MaxDispersionCount = maxDispersionCount;
-                PlayerLifeCount = playerLifeCount;
-                EnemyScoreModifier = enemyScoreModifier;
                 MaxToTargetDistanceToChangeMovDirection = maxToTargetDistanceToChangeMovDirection;
                 MinDistanceToPlayerDeath = minDistanceToPlayerDeath;
-                FruitScore = fruitScore;
                 PointScore = pointScore;
-                EnergyScore = energyScore;
-                EnemyScore = enemyScore;
             }
         }
         [Serializable]
@@ -173,9 +120,7 @@ namespace PlannedRout.LevelManagment
             Empty,
             Wall,
             Point,
-            Energy,
-            Door,
-            Fruit
+            Door
         }
 
 
@@ -185,9 +130,6 @@ namespace PlannedRout.LevelManagment
         public Vector2Int EnemySpawnPoint_Blue;
         public Vector2Int EnemySpawnPoint_Pink;
         public Vector2Int EnemySpawnPoint_Orange;
-        public Vector2Int RoomPoint;
-        public Vector2Int FruitSpawnPoint;
-        public int[] FruitSpawnTriggers;
         public GlobalConstData GlobalConsts;
 
         public LevelData(LevelMap levelMap,
@@ -196,9 +138,6 @@ namespace PlannedRout.LevelManagment
                          Vector2Int enemySpawnPoint_Blue,
                          Vector2Int enemySpawnPoint_Pink,
                          Vector2Int enemySpawnPoint_Orange,
-                         Vector2Int roomPoint,
-                         Vector2Int fruitSpawnPoint,
-                         int[] fruitSpawnTriggers,
                          GlobalConstData globalConsts)
         {
             LvlMap = levelMap;
@@ -207,9 +146,6 @@ namespace PlannedRout.LevelManagment
             EnemySpawnPoint_Blue= enemySpawnPoint_Blue;
             EnemySpawnPoint_Pink = enemySpawnPoint_Pink;
             EnemySpawnPoint_Orange= enemySpawnPoint_Orange;
-            RoomPoint = roomPoint;
-            FruitSpawnPoint = fruitSpawnPoint;
-            FruitSpawnTriggers = fruitSpawnTriggers;
             GlobalConsts = globalConsts;
         }
     }

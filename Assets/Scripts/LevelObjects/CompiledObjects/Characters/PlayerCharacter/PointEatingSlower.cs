@@ -16,6 +16,10 @@ namespace PlannedRout.LevelObjects.Characters
         {
             ProgressManager.PointCollectedEvent += PointCollected;
         }
+        protected override void UnsubscribeEventAction()
+        {
+            ProgressManager.PointCollectedEvent -= PointCollected;
+        }
         private void PointCollected(int i) =>
             SpeedModificationEventAction();
     }

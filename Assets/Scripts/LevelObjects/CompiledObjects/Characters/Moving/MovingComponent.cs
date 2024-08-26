@@ -204,8 +204,6 @@ namespace PlannedRout.LevelObjects.Characters
             SpeedProvider_ = SpeedComponent as ISpeedProvider;
             if (SpeedProvider_ == null)
                 throw new System.Exception("Missing speed provider.");
-
-            LevelReseter.LevelWasResetedEvent += Start;
         }
         private void Start()
         {

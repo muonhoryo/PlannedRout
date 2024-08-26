@@ -14,6 +14,10 @@ namespace PlannedRout
         {
             ProgressManager.ScoreCountChangedEvent += ScoreCountChanged;
         }
+        private void OnDestroy()
+        {
+            ProgressManager.ScoreCountChangedEvent-= ScoreCountChanged;
+        }
         private void ScoreCountChanged(int newScore)
         {
             CounterText.text= newScore.ToString();

@@ -15,6 +15,10 @@ namespace PlannedRout
         {
             ProgressManager.PointCollectedEvent += PointCollected;
         }
+        private void OnDestroy()
+        {
+            ProgressManager.PointCollectedEvent -= PointCollected;
+        }
         private void PointCollected(int count)
         {
             if (count >= LevelManager.Instance_.OnLevelPointCount_)

@@ -254,11 +254,8 @@ namespace PlannedRout.LevelManagment
         [SerializeField] private int LevelHeight;
         [SerializeField] private int LevelWidth;
         [SerializeField] private string PlayerTag;
-        [SerializeField] private string FruitTag;
-        [SerializeField] private string EnergyTag;
         [SerializeField] private string PointTag;
         [SerializeField] private string WallTag;
-        [SerializeField] private string RoomPointTag;
         [SerializeField] private string EnemyTag_Red;
         [SerializeField] private string EnemyTag_Blue;
         [SerializeField] private string EnemyTag_Pink;
@@ -279,11 +276,8 @@ namespace PlannedRout.LevelManagment
 
             {
                 Vector2Int PlayerPosition;
-                Vector2Int FruitPosition;
-                Vector2Int[] EnergyPositions;
                 Vector2Int[] PointsPositions;
                 Vector2Int[] WallsPositions;
-                Vector2Int RoomPointPosition;
                 Vector2Int EnemyPos_Red;
                 Vector2Int EnemyPos_Blue;
                 Vector2Int EnemyPos_Pink;
@@ -310,11 +304,8 @@ namespace PlannedRout.LevelManagment
                 }
 
                 PlayerPosition = FindObjectPosition(ref PlayerTag);
-                FruitPosition = FindObjectPosition(ref FruitTag);
-                EnergyPositions = FindObjectsPositions(ref EnergyTag);
                 PointsPositions = FindObjectsPositions(ref PointTag);
                 WallsPositions = FindObjectsPositions(ref WallTag);
-                RoomPointPosition = FindObjectPosition(ref RoomPointTag);
                 EnemyPos_Red = FindObjectPosition(ref EnemyTag_Red);
                 EnemyPos_Blue = FindObjectPosition(ref EnemyTag_Blue);
                 EnemyPos_Pink = FindObjectPosition(ref EnemyTag_Pink);
@@ -332,24 +323,11 @@ namespace PlannedRout.LevelManagment
                 }
 
                 levelMap[DoorPosition.x][DoorPosition.y] = LevelData.LevelPartType.Door;
-                levelMap[FruitPosition.x][FruitPosition.y] = LevelData.LevelPartType.Fruit;
 
-                PutPositionInMap(EnergyPositions, LevelData.LevelPartType.Energy);
                 PutPositionInMap(PointsPositions, LevelData.LevelPartType.Point);
                 PutPositionInMap(WallsPositions, LevelData.LevelPartType.Wall);
 
-                int[] FruitSpawnTriggers;
-                LevelData.GlobalConstData globalConsts;
-                if (LvlData != null)
-                {
-                    FruitSpawnTriggers = LevelData_.FruitSpawnTriggers;
-                    globalConsts = LevelData_.GlobalConsts;
-                }
-                else
-                {
-                    FruitSpawnTriggers = new int[0];
-                    globalConsts = new LevelData.GlobalConstData();
-                }
+                LevelData.GlobalConstData globalConsts=LvlData!=null?LevelData_.GlobalConsts:new LevelData.GlobalConstData();
 
                 LevelData.LevelMap compMap = new LevelData.LevelMap(LevelHeight, LevelWidth, levelMap);
 
@@ -360,9 +338,6 @@ namespace PlannedRout.LevelManagment
                     enemySpawnPoint_Blue: EnemyPos_Blue,
                     enemySpawnPoint_Pink: EnemyPos_Pink,
                     enemySpawnPoint_Orange: EnemyPos_Orange,
-                    roomPoint: RoomPointPosition,
-                    fruitSpawnPoint: FruitPosition,
-                    fruitSpawnTriggers: FruitSpawnTriggers,
                     globalConsts: globalConsts);
             } //Level data generation
 
@@ -374,14 +349,6 @@ namespace PlannedRout.LevelManagment
         {
             var data = LevelSerialization.GetLevelDataFromFile(LevelManager.LevelEditorSerializationPath);
             LevelManager.Instance_.InitializeLevel(data);
-
-            void PlaceObject(GameObject prefab,Vector2Int pos)
-            {
-                GameObject obj = GameObject.Instantiate(prefab, LevelLoadingData.Instance_.LevelParentObject.transform);
-                obj.transform.position = (Vector2)pos;
-            }
-            PlaceObject(LevelLoadingData.Instance_.LevelObjsPrefabs.FruitPrefab_, data.FruitSpawnPoint);
-            PlaceObject(LevelLoadingData.Instance_.LevelObjsPrefabs.RoomPointPrefab_, data.RoomPoint);
         }
 
         [ContextMenu("ResetLevel")]

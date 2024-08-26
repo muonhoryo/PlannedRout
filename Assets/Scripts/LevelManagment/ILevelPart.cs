@@ -8,9 +8,7 @@ namespace PlannedRout.LevelManagment
         {
             Wall,
             Door,
-            Point,
-            Fruit,
-            Energy
+            Point
         }
 
         public LevelPartType PartType_ { get; }

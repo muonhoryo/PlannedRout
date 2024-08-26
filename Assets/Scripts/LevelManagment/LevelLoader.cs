@@ -97,13 +97,6 @@ namespace PlannedRout.LevelManagment
                                 onLevelPointsCount++;
                                 break;
                             }
-                        case LevelData.LevelPartType.Energy:
-                            {
-                                GameObject energyObj = InstantiateObj(LevelLoadingData.Instance_.LevelObjsPrefabs.EnergyPrefab_);
-                                map[x][y] = new Energy(energyObj);
-                                onLevelPointsCount++;
-                                break;
-                            }
                         case LevelData.LevelPartType.Door:
                             {
                                 InstantiateObj(LevelLoadingData.Instance_.LevelObjsPrefabs.DoorPrefab_);
