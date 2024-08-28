@@ -27,8 +27,9 @@ namespace PlannedRout.LevelManagment
             //Others
             public float MaxToTargetDistanceToChangeMovDirection;
             public float MinDistanceToPlayerDeath;
-            //Given score
-            public int PointScore;
+            //Visual effects
+            public float WaveEffectSpeed;
+            public float WaveEffectRadius;
 
             public GlobalConstData(
                                    float playerAFKTime,
@@ -41,7 +42,8 @@ namespace PlannedRout.LevelManagment
                                    int nextRoomExitPointValue,
                                    float maxToTargetDistanceToChangeMovDirection,
                                    float minDistanceToPlayerDeath,
-                                   int pointScore)
+                                   float waveEffectSpeed,
+                                   float waveEffectRadius)
             {
                 PlayerAFKTime = playerAFKTime;
                 PointEatingDebuffTime = pointEatingDebuffTime;
@@ -53,7 +55,8 @@ namespace PlannedRout.LevelManagment
                 NextRoomExitPointValue = nextRoomExitPointValue;
                 MaxToTargetDistanceToChangeMovDirection = maxToTargetDistanceToChangeMovDirection;
                 MinDistanceToPlayerDeath = minDistanceToPlayerDeath;
-                PointScore = pointScore;
+                WaveEffectSpeed = waveEffectSpeed;
+                WaveEffectRadius = waveEffectRadius;
             }
         }
         [Serializable]
@@ -131,6 +134,10 @@ namespace PlannedRout.LevelManagment
         public Vector2Int EnemySpawnPoint_Pink;
         public Vector2Int EnemySpawnPoint_Orange;
         public GlobalConstData GlobalConsts;
+        public string GUIAdditionalInformationText;
+        public float CameraImageSize;
+        public float CameraLevelOffset;
+        public float GUISize;
 
         public LevelData(LevelMap levelMap,
                          Vector2Int playerSpawnPoint,
@@ -138,7 +145,11 @@ namespace PlannedRout.LevelManagment
                          Vector2Int enemySpawnPoint_Blue,
                          Vector2Int enemySpawnPoint_Pink,
                          Vector2Int enemySpawnPoint_Orange,
-                         GlobalConstData globalConsts)
+                         GlobalConstData globalConsts,
+                         string guiAdditionalInformationText,
+                         float cameraImageSize,
+                         float cameraLevelOffset,
+                         float guiSize)
         {
             LvlMap = levelMap;
             PlayerSpawnPoint = playerSpawnPoint;
@@ -147,6 +158,10 @@ namespace PlannedRout.LevelManagment
             EnemySpawnPoint_Pink = enemySpawnPoint_Pink;
             EnemySpawnPoint_Orange= enemySpawnPoint_Orange;
             GlobalConsts = globalConsts;
+            GUIAdditionalInformationText = guiAdditionalInformationText;
+            CameraImageSize= cameraImageSize;
+            CameraLevelOffset = cameraLevelOffset;
+            GUISize = guiSize;
         }
     }
 

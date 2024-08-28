@@ -4,6 +4,9 @@
 /Assets/Scripts/Editor
 /Assets/Scripts/GameData
 /Assets/Libraries
+/Assets/GUI
+/Assets/Shaders
+Assets/pixel font.ttf
 /.vs
 /Library
 /Logs

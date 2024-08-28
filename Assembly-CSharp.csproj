@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\DEBUGONLY\ExitGameControl.cs" />
     <Compile Include="Assets\Scripts\GameSceneTransitionManagment\MainMenuInteractions.cs" />
     <Compile Include="Assets\Scripts\GameProgressManagment\ProgressManager.cs" />
+    <Compile Include="Assets\Scripts\Others\VisualEffects\WaveMotionEffect.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyCharacter\EnemyDeathBringing.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PlayerCharacter\PlayerDeath.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\States\DispersionBehaviourState.cs" />
@@ -73,7 +74,6 @@
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\EnemyBehaviour.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\LevelData.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\States\IdleBehaviourState.cs" />
-    <Compile Include="Assets\Scripts\Others\CameraPositionChanger.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\LevelObjectsPrefabs.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Moving\ISpeedProvider.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\LevelLoader.cs" />
@@ -82,24 +82,30 @@
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Moving\EnemySpeedComponent.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\LevelSerialization.cs" />
     <Compile Include="Assets\Scripts\PlayerControl\PlayerController_Character.cs" />
+    <Compile Include="Assets\Scripts\Others\ProgressBar.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\PathFinding.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Point.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Moving\SpeedComponent.cs" />
     <Compile Include="Assets\Scripts\Others\TimersManager.cs" />
+    <Compile Include="Assets\Scripts\Others\CameraInitialization.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Wall.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PlayerCharacter\PointEatingSlower.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Moving\MovingComponent.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\ILevelPart.cs" />
+    <Compile Include="Assets\Scripts\Others\GUISizeInitialization.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\StatesControl\OnStartStatesAssigner.cs" />
     <Compile Include="Assets\Scripts\Extensions.cs" />
+    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyCharacter\OnProgressEnemyAcceleration.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\OnEventSpeedModificator.cs" />
     <Compile Include="Assets\Scripts\GameSceneTransitionManagment\GameInitialization.cs" />
-    <Compile Include="Assets\Scripts\Others\ScoreCounter.cs" />
+    <Compile Include="Assets\Scripts\Others\GUIAdditionalInfoInitialization.cs" />
+    <Compile Include="Assets\Scripts\DEBUGONLY\PointCounter.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PlayerCharacter\PointCollectingComponent.cs" />
     <Compile Include="Assets\Scripts\GameSceneTransitionManagment\GamePause.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\LevelManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Shaders\Bar.shader" />
     <None Include="Assets\Libraries\MuonhoryoLibrary.dll" />
   </ItemGroup>
   <ItemGroup>

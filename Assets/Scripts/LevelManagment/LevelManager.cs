@@ -107,12 +107,14 @@ namespace PlannedRout.LevelManagment
                 bool CheckCell()
                 {
                     ILevelPart cell = GetCell(checkedCell.x, checkedCell.y);
-                    if (cell!=null&&
+                    if (cell != null &&
                         (cell.PartType_ == ILevelPart.LevelPartType.Wall ||
                         (isCollideDoor && cell.PartType_ == ILevelPart.LevelPartType.Door)))
                         return false;
                     else
-                        return true;
+                    {
+                        if()
+                    }
                 }
 
                 if (!CheckCell())
@@ -327,7 +329,14 @@ namespace PlannedRout.LevelManagment
                 PutPositionInMap(PointsPositions, LevelData.LevelPartType.Point);
                 PutPositionInMap(WallsPositions, LevelData.LevelPartType.Wall);
 
-                LevelData.GlobalConstData globalConsts=LvlData!=null?LevelData_.GlobalConsts:new LevelData.GlobalConstData();
+                bool isExistLvlData = LvlData != null;
+
+                string additionalInfo = isExistLvlData ? LevelData_.GUIAdditionalInformationText : "";
+                float cameraSize = isExistLvlData ? LevelData_.CameraImageSize : 1;
+                float cameraLevelOffset = isExistLvlData ? LevelData_.CameraLevelOffset : 0;
+                float guiSize = isExistLvlData ? LevelData_.GUISize : 1;
+
+                LevelData.GlobalConstData globalConsts=isExistLvlData?LevelData_.GlobalConsts:new LevelData.GlobalConstData();
 
                 LevelData.LevelMap compMap = new LevelData.LevelMap(LevelHeight, LevelWidth, levelMap);
 
@@ -338,7 +347,11 @@ namespace PlannedRout.LevelManagment
                     enemySpawnPoint_Blue: EnemyPos_Blue,
                     enemySpawnPoint_Pink: EnemyPos_Pink,
                     enemySpawnPoint_Orange: EnemyPos_Orange,
-                    globalConsts: globalConsts);
+                    globalConsts: globalConsts,
+                    guiAdditionalInformationText: additionalInfo,
+                    cameraImageSize: cameraSize,
+                    cameraLevelOffset: cameraLevelOffset,
+                    guiSize: guiSize);
             } //Level data generation
 
             LevelSerialization.GenerateLevelSave(levelData, LevelManager.LevelEditorSerializationPath);

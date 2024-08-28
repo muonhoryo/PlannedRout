@@ -16,6 +16,7 @@ namespace PlannedRout.LevelObjects.Characters
 
         private EnemyBehaviour[] Enemies;
         private int FreeEnemiesCount = 1;
+        private int NextRealizationPointCount;
 
         private Coroutine EnemyRealizationCoroutine;
 
@@ -34,6 +35,7 @@ namespace PlannedRout.LevelObjects.Characters
                 GameObject.FindGameObjectWithTag(EnemyTag_Orange).GetComponent<EnemyBehaviour>()
             };
             StartCoroutine(ReferredStart());
+            NextRealizationPointCount = LevelManager.Instance_.GlobalConsts_.NextRoomExitPointValue;
         }
         private IEnumerator ReferredStart()
         {
@@ -41,6 +43,10 @@ namespace PlannedRout.LevelObjects.Characters
             ActivateEnemiesRealization();
             ProgressManager.PointCollectedEvent += PointCollected;
             EnemyRealizationCoroutine = StartCoroutine(ReleaseNextEnemy());
+        }
+        private void OnDestroy()
+        {
+            ProgressManager.PointCollectedEvent -= PointCollected;
         }
         private void ActivateEnemiesRealization()
         {
@@ -70,8 +76,22 @@ namespace PlannedRout.LevelObjects.Characters
                 StopCoroutine(EnemyRealizationCoroutine);
             EnemyRealizationCoroutine = StartCoroutine(ReleaseNextEnemy());
         }
-        private void PointCollected(int count) =>
-            UpdateWaiter();
+        private void PointCollected(int count)
+        {
+            if (count >= NextRealizationPointCount)
+            {
+                Enemies[FreeEnemiesCount].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Dispersion);
+                if (EnemyRealizationCoroutine != null)
+                {
+                    NextRealizationPointCount += LevelManager.Instance_.GlobalConsts_.NextRoomExitPointValue;
+                    UpdateWaiter();
+                }
+            }
+            else
+            {
+                UpdateWaiter();
+            }
+        }
         private IEnumerator ReleaseNextEnemy()
         {
             while (true)
@@ -83,6 +103,7 @@ namespace PlannedRout.LevelObjects.Characters
         private void StopRealization()
         {
             StopCoroutine(EnemyRealizationCoroutine);
+            EnemyRealizationCoroutine = null;
             ProgressManager.PointCollectedEvent -= PointCollected;
         }
     }

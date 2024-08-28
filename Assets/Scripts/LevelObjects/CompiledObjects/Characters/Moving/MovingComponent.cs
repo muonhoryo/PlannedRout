@@ -10,6 +10,7 @@ namespace PlannedRout.LevelObjects.Characters
     {
         public event Action<Vector2Int> ChangePositionEvent = delegate { };
         public event Action TunnelTransitionEvent = delegate { };
+        public event Action<MovingDirection> ChangeDirectionEvent = delegate { };
 
         public enum MovingDirection:byte
         {
@@ -188,6 +189,7 @@ namespace PlannedRout.LevelObjects.Characters
                     transform.position = new Vector2(CurrentPosition_.x, CurrentPosition_.y);
                 }
             }
+            ChangeDirectionEvent(direction);
         }
         private void StartMoving()
         {

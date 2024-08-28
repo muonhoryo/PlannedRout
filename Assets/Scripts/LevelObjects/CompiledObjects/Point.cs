@@ -10,7 +10,6 @@ namespace PlannedRout.LevelObjects
     {
         public Point(GameObject associatedGameObj):base(associatedGameObj) { }
 
-        protected override int AddedScore_ => LevelManager.Instance_.GlobalConsts_.PointScore;
         public override ILevelPart.LevelPartType PartType_ => ILevelPart.LevelPartType.Point;
 
         protected override void PickUpAdditionAction()
