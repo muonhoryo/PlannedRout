@@ -1,9 +1,13 @@
 
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using PlannedRout.LevelManagment;
 using PlannedRout.LevelObjects.Characters;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace PlannedRout
@@ -29,116 +33,107 @@ namespace PlannedRout
 
         public void FindPath()
         {
-            List<Vector2Int> checkedCells= new List<Vector2Int>() { Start};
-            List<Vector2Int> path = new List<Vector2Int> { Start };
+            List<Vector2Int> checkedCells = new List<Vector2Int> {Start };
+            List<List<Vector2Int>> pathes= new List<List<Vector2Int>> { new List<Vector2Int> { Start } };
 
-            bool FindCycle(Vector2Int point) //return true if found path
+            Queue<(List<Vector2Int>,Vector2Int)> findQueue = new Queue<(List<Vector2Int>, Vector2Int)> {};
+            findQueue.Enqueue((pathes[0],Start));
+
+
+            List<Vector2Int> associatedPath;
+            Vector2Int point;
+            Vector2Int right,top,left,bottom;
+            bool isAlreadyHasWay;
+
+            while (findQueue.Count != 0)
             {
-                Vector2Int newPos;
-                bool CheckNextPoint()
+                (associatedPath, point) = findQueue.Dequeue();
+
+
+                isAlreadyHasWay = false;
+
+                right = new Vector2Int(point.x + 1, point.y);
+                top = new Vector2Int(point.x, point.y + 1);
+                left = new Vector2Int(point.x - 1,point.y);
+                bottom = new Vector2Int(point.x, point.y - 1);
+
+                bool CheckPoint(Vector2Int checkingPoint)
                 {
-                    if (newPos == End)
+                    if (LevelManager.Instance_.CheckCellPosition(checkingPoint.x, checkingPoint.y))
                     {
-                        path.Add(newPos);
-                        return true;
-                    }
-
-                    if (checkedCells.Contains(newPos)||
-                        !LevelManager.Instance_.CheckCellPosition(newPos.x,newPos.y))
-                        return false;
-
-                    checkedCells.Add(newPos);
-
-                    if (IsPassableCell(LevelManager.Instance_.GetCell(newPos.x, newPos.y)))
-                    {
-                        path.Add(newPos);
-                        bool isFound= FindCycle(newPos);
-                        if(!isFound)
-                            path.RemoveAt(path.Count - 1);
-                        return isFound;
+                        if (!checkedCells.Contains(checkingPoint))
+                        {
+                            ILevelPart cell = LevelManager.Instance_.GetCell(checkingPoint.x, checkingPoint.y);
+                            if (cell == null || cell.PartType_ != ILevelPart.LevelPartType.Wall)
+                            {
+                                return true;
+                            }
+                        }
                     }
                     return false;
                 }
 
-                bool CheckRight()
+                if(right==End||top==End||
+                    left == End || bottom == End)
                 {
-                    newPos = new Vector2Int(point.x + 1, point.y);
-                    return CheckNextPoint();
-                }
-                bool CheckLeft()
-                {
-                    newPos = new Vector2Int(point.x - 1, point.y);
-                    return CheckNextPoint();
-                }
-                bool CheckTop()
-                {
-                    newPos = new Vector2Int(point.x, point.y+1);
-                    return CheckNextPoint();
-                }
-                bool CheckBottom()
-                {
-                    newPos = new Vector2Int(point.x, point.y-1);
-                    return CheckNextPoint();
-                }
-
-                bool? isRightSide=null;
-                bool? isTopSide=null;
-                //Check priority directions
-                if (point.x < End.x)
-                {
-                    isRightSide = true;
-                    if (CheckRight())
-                        return true;
-                }
-                else if(point.x >End.x)
-                {
-                    isRightSide = false;
-                    if (CheckLeft())
-                        return true;
-                }
-
-                if (point.y < End.y)
-                {
-                    isTopSide = true;
-                    if (CheckTop())
-                        return true;
-                }
-                else if (point.y > End.y)
-                {
-                    isTopSide = false;
-                    if (CheckBottom())
-                        return true;
-                }
-                //Check other directions
-                if (isRightSide == null || (bool)isRightSide)
-                {
-                    if (CheckLeft())
-                        return true;
+                    Path = associatedPath;
+                    Path.Add(End);
+                    break;
                 }
                 else
                 {
-                    if (CheckRight())
-                        return true;
-                }
 
-                if(isTopSide==null||(bool)isTopSide)
-                {
-                    if (CheckBottom())
-                        return true;
-                }
-                else
-                {
-                    if (CheckTop())
-                        return true;
-                }
+                    if (CheckPoint(right))
+                    {
+                        isAlreadyHasWay=true;
+                        associatedPath.Add(right);
+                        checkedCells.Add(right);
+                        findQueue.Enqueue((associatedPath,right));
+                    }
 
-                return false;
+                    void CheckPoint_Next(Vector2Int checkedPoint)
+                    {
+                        if (CheckPoint(checkedPoint))
+                        {
+                            if (isAlreadyHasWay)
+                                AddNewPath(checkedPoint);
+                            else
+                            {
+                                isAlreadyHasWay = true;
+                                associatedPath.Add(checkedPoint);
+                                findQueue.Enqueue((associatedPath, checkedPoint));
+                            }
+                            checkedCells.Add(checkedPoint);
+                        }
+                    }
+                    void AddNewPath(Vector2Int newPathLastPoint)
+                    {
+                        if (Start.x == 0 &&
+                            Start.y == 0 &&
+                            newPathLastPoint.x == 7 &&
+                            newPathLastPoint.y == 1)
+                        {
+                            Debug.Log(point + "/" + right + "/" + top);
+                            StringBuilder str = new StringBuilder(point + ": ");
+                            foreach (var i in associatedPath)
+                                str.Append(i + "/");
+                            Debug.Log(str);
+                        }
+
+                        var newPath = new List<Vector2Int>(associatedPath);
+                        newPath.Add(newPathLastPoint);
+                        pathes.Add(newPath);
+                        findQueue.Enqueue((newPath, newPathLastPoint));
+                    }
+
+                    CheckPoint_Next(top);
+                    CheckPoint_Next(left);
+                    CheckPoint_Next(bottom);
+
+                    if (!isAlreadyHasWay)
+                        pathes.Remove(associatedPath);
+                }
             }
-            bool IsPassableCell(ILevelPart cell) =>
-                cell==null ||cell.PartType_ != ILevelPart.LevelPartType.Wall;
-
-            if (FindCycle(Start))
-                Path = path;
         }
     }
 }

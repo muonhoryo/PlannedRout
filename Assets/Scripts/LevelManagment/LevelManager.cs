@@ -85,7 +85,7 @@ namespace PlannedRout.LevelManagment
             return row>=0&&row<LevelData_.LvlMap.Height
                 && column>=0&&column<LevelData_.LvlMap.Width;
         }
-        public Vector2Int GetNearestPassableCell(Vector2Int point,bool isCollideDoor=true)
+        public Vector2Int GetNearestPassableCell(Vector2Int point,Vector2Int pathFindingStartPos,bool isCollideDoor=true)
         {
             List<Vector2Int> checkedCells = new List<Vector2Int> { point };
             Queue<Vector2Int> checkQueue = new Queue<Vector2Int>();
@@ -113,7 +113,9 @@ namespace PlannedRout.LevelManagment
                         return false;
                     else
                     {
-                        if()
+                        var pathFinding = new PathFinding(pathFindingStartPos,checkedCell);
+                        pathFinding.FindPath();
+                        return pathFinding.Path != null;
                     }
                 }
 
@@ -141,6 +143,8 @@ namespace PlannedRout.LevelManagment
             Debug.LogError(point);
             throw new System.Exception("Invalid map or cannot finding free cell.");
         }
+        public Vector2Int GetNearestPassableCell(Vector2Int point, bool isCollideDoor = true) =>
+            GetNearestPassableCell(point, LevelData_.PlayerSpawnPoint, isCollideDoor);
         public Vector2Int GetFarthestCellAtDirection(Vector2Int origin,MovingComponent.MovingDirection direction,
             bool collideDoor=false)
         {

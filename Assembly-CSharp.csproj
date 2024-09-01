@@ -99,7 +99,6 @@
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\OnEventSpeedModificator.cs" />
     <Compile Include="Assets\Scripts\GameSceneTransitionManagment\GameInitialization.cs" />
     <Compile Include="Assets\Scripts\Others\GUIAdditionalInfoInitialization.cs" />
-    <Compile Include="Assets\Scripts\DEBUGONLY\PointCounter.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PlayerCharacter\PointCollectingComponent.cs" />
     <Compile Include="Assets\Scripts\GameSceneTransitionManagment\GamePause.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\LevelManager.cs" />

@@ -1,5 +1,6 @@
 
 
+using System.Linq;
 using System.Text;
 using PlannedRout.LevelManagment;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace PlannedRout.LevelObjects.Characters
 {
     public sealed class DispersionBehaviourState : MonoBehaviour, EnemyBehaviour.IEnemyBehaviourState
     {
-        public enum DispersionTarget:byte
+        public enum DispersionTarget : byte
         {
             RightTop,
             LeftTop,
@@ -24,7 +25,7 @@ namespace PlannedRout.LevelObjects.Characters
         {
             get
             {
-                if (CurrentCornerIndex == Corners.Length )
+                if (CurrentCornerIndex == Corners.Length)
                     CurrentCornerIndex = 0;
                 return Corners[CurrentCornerIndex++];
             }
@@ -41,13 +42,13 @@ namespace PlannedRout.LevelObjects.Characters
         {
             LevelManager.LevelInitializedEvent -= ReferredInitialization;
 
-            bool isRight =((byte)Target&1)==0;
-            bool isTop =((byte)Target&2)==0;
+            bool isRight = ((byte)Target & 1) == 0;
+            bool isTop = ((byte)Target & 2) == 0;
 
             int rightBorder = LevelManager.Instance_.LevelData_.LvlMap.Width - 2;
             int topBorder = LevelManager.Instance_.LevelData_.LvlMap.Height - 2;
-            int widthCenter= LevelManager.Instance_.LevelData_.LvlMap.Width / 2 ;
-            int heightCenter= LevelManager.Instance_.LevelData_.LvlMap.Height / 2;
+            int widthCenter = LevelManager.Instance_.LevelData_.LvlMap.Width / 2;
+            int heightCenter = LevelManager.Instance_.LevelData_.LvlMap.Height / 2;
 
             Corners = new Vector2Int[4]
             {
@@ -64,17 +65,45 @@ namespace PlannedRout.LevelObjects.Characters
                     widthCenter,
                     isTop?topBorder:1)
             };
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 Vector2Int cellPos = Corners[i];
-                ILevelPart cell = LevelManager.Instance_.GetCell(cellPos.x, cellPos.y);
-                if (cell!=null&&cell.PartType_ == ILevelPart.LevelPartType.Wall)
-                    Corners[i] = LevelManager.Instance_.GetNearestPassableCell(cellPos, false);
+                void FindOtherPoint()
+                {
+                    Corners[i] = LevelManager.Instance_.GetNearestPassableCell(cellPos, MovingScript.CurrentPosition_, false);
+                }
+
+                if (MovingScript.CurrentPosition_ == Corners[i])
+                    FindOtherPoint();
+                else
+                {
+                    ILevelPart cell = LevelManager.Instance_.GetCell(cellPos.x, cellPos.y);
+                    if (cell != null && cell.PartType_ == ILevelPart.LevelPartType.Wall)
+                        FindOtherPoint();
+                    else
+                    {
+                        PathFinding pathFinding = new PathFinding(MovingScript.CurrentPosition_, Corners[i]);
+                        pathFinding.FindPath();
+                        if (pathFinding.Path == null)
+                            FindOtherPoint();
+                        else
+                        {
+                            StringBuilder str2 = new StringBuilder();
+                            foreach (var j in pathFinding.Path)
+                                str2.Append(j + "---");
+                            Debug.Log(str2);
+                        }
+                    }
+                }
             }
+            StringBuilder str = new StringBuilder();
+            foreach (var i in Corners)
+                str.Append(i + "---");
+            Debug.Log(str); 
         }
 
         Vector2Int EnemyBehaviour.IEnemyBehaviourState.Target_ => Target_;
-        public void OnStateEnter() 
+        public void OnStateEnter()
         {
             CurrentCornerIndex = MovingScript.CurrentPosition_ != Corners[0] ? 0 : 1;
         }

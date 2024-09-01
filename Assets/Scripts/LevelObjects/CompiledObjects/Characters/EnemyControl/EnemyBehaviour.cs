@@ -30,9 +30,6 @@ namespace PlannedRout.LevelObjects.Characters
         [SerializeField] private MonoBehaviour IdleBehaviourStateComponent;
 
         private IEnemyBehaviourState DispersionBehaviourState;
-        private IEnemyBehaviourState PersecutionBehaviourState;
-        private IEnemyBehaviourState ScaringBehaviourState;
-        private IEnemyBehaviourState BackHomeBehaviourState;
         private IEnemyBehaviourState IdleBehaviourState;
 
         [SerializeField] private MovingComponent MovingScript;
@@ -56,6 +53,8 @@ namespace PlannedRout.LevelObjects.Characters
 
         private List<Vector2Int> PathToTarget;
         private int CurrentPathTarget = 1;
+
+        private Dictionary<(Vector2Int, Vector2Int), List<Vector2Int>> CashedPathes = new Dictionary<(Vector2Int, Vector2Int), List<Vector2Int>>();
 
         private void SetBehaviourState(IEnemyBehaviourState state)
         {
@@ -99,17 +98,30 @@ namespace PlannedRout.LevelObjects.Characters
 
         public void StartMovingToTarget()
         {
-            void SelectTargetFromState()
+            void SelectTargetFromState(Vector2Int target)
             {
-                Target_ = CurrentState_.Target_;
-                PathFinding pathFinding = new PathFinding(MovingScript.CurrentPosition_, Target_);
-                pathFinding.FindPath();
-                PathToTarget = pathFinding.Path;
-                CurrentPathTarget = 1;
-                if (PathToTarget == null)
-                    SelectTargetFromState(); 
+                Target_ = target;
+                (Vector2Int, Vector2Int) pathKey = (MovingScript.CurrentPosition_, Target_);
+                if (CashedPathes.ContainsKey(pathKey))
+                {
+                    PathToTarget = CashedPathes[pathKey];
+                }
+                else
+                {
+                    PathFinding pathFinding = new PathFinding(MovingScript.CurrentPosition_, Target_);
+                    pathFinding.FindPath();
+                    PathToTarget = pathFinding.Path;
+                    CurrentPathTarget = 1;
+#if UNITY_EDITOR
+                    if (PathToTarget == null||PathToTarget.Count<=1)
+                    {
+                        throw new Exception("Cannot find path to target: "+MovingScript.CurrentPosition_+"/"+Target_);
+                    }
+#endif
+                    CashedPathes.Add(pathKey, pathFinding.Path);
+                }
             }
-            SelectTargetFromState();
+            SelectTargetFromState(CurrentState_.Target_);
 
             MovingScript.ChangeDirection(GetDirectionBetweenPoints(MovingScript.CurrentPosition_, PathToTarget[CurrentPathTarget]));
             CurrentPathTarget++;
