@@ -108,20 +108,8 @@ namespace PlannedRout
                     }
                     void AddNewPath(Vector2Int newPathLastPoint)
                     {
-                        if (Start.x == 0 &&
-                            Start.y == 0 &&
-                            newPathLastPoint.x == 7 &&
-                            newPathLastPoint.y == 1)
-                        {
-                            Debug.Log(point + "/" + right + "/" + top);
-                            StringBuilder str = new StringBuilder(point + ": ");
-                            foreach (var i in associatedPath)
-                                str.Append(i + "/");
-                            Debug.Log(str);
-                        }
-
                         var newPath = new List<Vector2Int>(associatedPath);
-                        newPath.Add(newPathLastPoint);
+                        newPath[newPath.Count - 1] = newPathLastPoint;
                         pathes.Add(newPath);
                         findQueue.Enqueue((newPath, newPathLastPoint));
                     }

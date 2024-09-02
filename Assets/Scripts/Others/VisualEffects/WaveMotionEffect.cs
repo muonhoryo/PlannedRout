@@ -1,6 +1,7 @@
 
 using PlannedRout.LevelManagment;
 using PlannedRout.LevelObjects.Characters;
+using TMPro;
 using UnityEngine;
 
 namespace PlannedRout.VisualEffects
@@ -9,8 +10,9 @@ namespace PlannedRout.VisualEffects
     {
         [SerializeField] private MovingComponent Owner;
 
-        private bool isHorizontalMotion = true;
-        private Vector2 TargetPosition;
+        private MovingComponent.MovingDirection MovingDirection;
+        private float TargetRotation;
+        private int StepMod=1;
 
         private void Awake()
         {
@@ -22,15 +24,18 @@ namespace PlannedRout.VisualEffects
             LevelManager.LevelInitializedEvent -= ReferredInitialization;
             Owner.ChangeDirectionEvent += ChangeDirection;
             enabled = true;
-            TargetPosition = new Vector2(LevelManager.Instance_.GlobalConsts_.WaveEffectRadius, 0);
+            TargetRotation = LevelManager.Instance_.GlobalConsts_.WaveEffectRadius;
+            MovingDirection = MovingComponent.MovingDirection.Right;
         }
         private void ChangeDirection(MovingComponent.MovingDirection direction)
         {
-            bool needToChange = (((byte)direction &1) == 0)==isHorizontalMotion;
-            if (needToChange)
+            if (direction != MovingDirection)
             {
-                isHorizontalMotion = !isHorizontalMotion;
-                TargetPosition = new Vector2(TargetPosition.y, TargetPosition.x);
+                int diff = Mathf.Abs((int)direction - (int)MovingDirection);
+                StepMod+= diff;
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z + diff);
+                TargetRotation = ((int)direction * 90 + (TargetRotation - (int)MovingDirection * 90)+360)%360;
+                MovingDirection = direction;
             }
         }
         private void OnDestroy()
@@ -39,22 +44,37 @@ namespace PlannedRout.VisualEffects
         }
         private void FixedUpdate()
         {
-            Vector2 diff = TargetPosition - (Vector2)transform.localPosition;
-            Vector2 step = diff.normalized * LevelManager.Instance_.GlobalConsts_.WaveEffectSpeed;
-            float stepLength = step.magnitude;
-            if (stepLength==0||step.magnitude >= diff.magnitude)
+            float angle = transform.localEulerAngles.z;
+            int rotationSide;
+            float diff = (TargetRotation - angle+360)%360;
+            float step = LevelManager.Instance_.GlobalConsts_.WaveEffectSpeed * StepMod;
+            if (diff < 0)
+                diff += 360;
+            if (diff > 180)
             {
-                transform.localPosition = TargetPosition;
-                ChangeTargetPosition();
+                rotationSide = -1;
+                diff = 360 - diff;
             }
             else
             {
-                transform.localPosition += (Vector3)step;
+                rotationSide = 1;
+            }
+            if (diff <= step)
+            {
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, TargetRotation);
+                ChangeTargetRotation();
+            }
+            else
+            {
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y,
+                    transform.localEulerAngles.z + step*rotationSide);
             }
         }
-        private void ChangeTargetPosition()
+        private void ChangeTargetRotation()
         {
-            TargetPosition = -TargetPosition;
+            TargetRotation = (360 - TargetRotation + (int)MovingDirection * 180) % 360;
+            if (StepMod != 1)
+                StepMod = 1;
         }
     }
 }

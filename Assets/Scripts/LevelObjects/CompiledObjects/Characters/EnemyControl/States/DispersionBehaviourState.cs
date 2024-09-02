@@ -50,6 +50,8 @@ namespace PlannedRout.LevelObjects.Characters
             int widthCenter = LevelManager.Instance_.LevelData_.LvlMap.Width / 2;
             int heightCenter = LevelManager.Instance_.LevelData_.LvlMap.Height / 2;
 
+            Vector2Int currPosition = MovingScript.transform.position.GetIntegerPosition();
+            
             Corners = new Vector2Int[4]
             {
                 new Vector2Int(
@@ -73,7 +75,7 @@ namespace PlannedRout.LevelObjects.Characters
                     Corners[i] = LevelManager.Instance_.GetNearestPassableCell(cellPos, MovingScript.CurrentPosition_, false);
                 }
 
-                if (MovingScript.CurrentPosition_ == Corners[i])
+                if (currPosition == Corners[i])
                     FindOtherPoint();
                 else
                 {
@@ -82,24 +84,13 @@ namespace PlannedRout.LevelObjects.Characters
                         FindOtherPoint();
                     else
                     {
-                        PathFinding pathFinding = new PathFinding(MovingScript.CurrentPosition_, Corners[i]);
+                        PathFinding pathFinding = new PathFinding(currPosition, Corners[i]);
                         pathFinding.FindPath();
                         if (pathFinding.Path == null)
                             FindOtherPoint();
-                        else
-                        {
-                            StringBuilder str2 = new StringBuilder();
-                            foreach (var j in pathFinding.Path)
-                                str2.Append(j + "---");
-                            Debug.Log(str2);
-                        }
                     }
                 }
             }
-            StringBuilder str = new StringBuilder();
-            foreach (var i in Corners)
-                str.Append(i + "---");
-            Debug.Log(str); 
         }
 
         Vector2Int EnemyBehaviour.IEnemyBehaviourState.Target_ => Target_;

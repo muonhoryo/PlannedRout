@@ -30,6 +30,7 @@ namespace PlannedRout.LevelManagment
             //Visual effects
             public float WaveEffectSpeed;
             public float WaveEffectRadius;
+            public float TailLengthMod;
 
             public GlobalConstData(
                                    float playerAFKTime,
@@ -43,7 +44,8 @@ namespace PlannedRout.LevelManagment
                                    float maxToTargetDistanceToChangeMovDirection,
                                    float minDistanceToPlayerDeath,
                                    float waveEffectSpeed,
-                                   float waveEffectRadius)
+                                   float waveEffectRadius,
+                                   float tailLengthMod)
             {
                 PlayerAFKTime = playerAFKTime;
                 PointEatingDebuffTime = pointEatingDebuffTime;
@@ -57,6 +59,7 @@ namespace PlannedRout.LevelManagment
                 MinDistanceToPlayerDeath = minDistanceToPlayerDeath;
                 WaveEffectSpeed = waveEffectSpeed;
                 WaveEffectRadius = waveEffectRadius;
+                TailLengthMod = tailLengthMod;
             }
         }
         [Serializable]

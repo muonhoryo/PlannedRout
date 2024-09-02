@@ -206,11 +206,14 @@ namespace PlannedRout.LevelObjects.Characters
             SpeedProvider_ = SpeedComponent as ISpeedProvider;
             if (SpeedProvider_ == null)
                 throw new System.Exception("Missing speed provider.");
+
+            LevelManager.LevelInitializedEvent += ReferredInitialization;
         }
-        private void Start()
+        private void ReferredInitialization()
         {
+            LevelManager.LevelInitializedEvent -= ReferredInitialization;
             CurrentPosition_ = transform.position.GetIntegerPosition();
-            InternalChangeDirection(MovingDirection.Bottom,true);
+            InternalChangeDirection(MovingDirection.Bottom, true);
         }
     }
 }

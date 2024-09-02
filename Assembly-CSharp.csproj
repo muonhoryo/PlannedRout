@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\DEBUGONLY\ExitGameControl.cs" />
     <Compile Include="Assets\Scripts\GameSceneTransitionManagment\MainMenuInteractions.cs" />
     <Compile Include="Assets\Scripts\GameProgressManagment\ProgressManager.cs" />
+    <Compile Include="Assets\Scripts\Others\VisualEffects\TailLengthInitialization.cs" />
     <Compile Include="Assets\Scripts\Others\VisualEffects\WaveMotionEffect.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyCharacter\EnemyDeathBringing.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PlayerCharacter\PlayerDeath.cs" />

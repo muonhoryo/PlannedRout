@@ -105,6 +105,7 @@ namespace PlannedRout.LevelObjects.Characters
                 if (CashedPathes.ContainsKey(pathKey))
                 {
                     PathToTarget = CashedPathes[pathKey];
+                    CurrentPathTarget = 1;
                 }
                 else
                 {
