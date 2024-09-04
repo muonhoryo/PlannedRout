@@ -3,7 +3,7 @@
 using PlannedRout.LevelManagment;
 using UnityEngine;
 
-namespace PlannedRout.VisualEffects 
+namespace PlannedRout.Visual 
 {
     public sealed class TailLengthInitialization : MonoBehaviour
     {

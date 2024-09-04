@@ -4,7 +4,7 @@ using PlannedRout.LevelObjects.Characters;
 using TMPro;
 using UnityEngine;
 
-namespace PlannedRout.VisualEffects
+namespace PlannedRout.Visual
 {
     public sealed class WaveMotionEffect : MonoBehaviour
     {
