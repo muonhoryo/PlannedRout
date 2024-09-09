@@ -18,6 +18,8 @@ namespace PlannedRout.Visual
         {
             enabled = false;
             LevelManager.LevelInitializedEvent += ReferredInitialization;
+            GamePause.GamePausedEvent += GamePaused;
+            GamePause.GameUnpausedEvent += GameUnpaused;
         }
         private void ReferredInitialization()
         {
@@ -41,6 +43,8 @@ namespace PlannedRout.Visual
         private void OnDestroy()
         {
             Owner.ChangeDirectionEvent -= ChangeDirection;
+            GamePause.GamePausedEvent -= GamePaused;
+            GamePause.GameUnpausedEvent -= GameUnpaused;
         }
         private void FixedUpdate()
         {
@@ -75,6 +79,15 @@ namespace PlannedRout.Visual
             TargetRotation = (360 - TargetRotation + (int)MovingDirection * 180) % 360;
             if (StepMod != 1)
                 StepMod = 1;
+        }
+
+        private void GamePaused()
+        {
+            enabled = false;
+        }
+        private void GameUnpaused()
+        {
+            enabled = true;
         }
     }
 }

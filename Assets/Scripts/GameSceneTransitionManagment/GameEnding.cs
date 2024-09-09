@@ -9,7 +9,8 @@ namespace PlannedRout
 {
     public sealed class GameEnding : MonoBehaviour 
     {
-        [SerializeField] private string MainMenuSceneName;
+        [SerializeField] private Animator Animator;
+        [SerializeField] private string AnimTriggerName;
 
         private void Awake()
         {
@@ -28,7 +29,8 @@ namespace PlannedRout
         }
         private void EndGame()
         {
-            SceneManager.LoadScene(MainMenuSceneName);
+            GamePause.Instance_.PauseGame();
+            Animator.SetTrigger(AnimTriggerName);
         }
     }
 }

@@ -22,7 +22,9 @@ namespace PlannedRout.LevelObjects.Characters
         {
             if(Vector2.Distance(transform.position,Target.transform.position)<=
                 LevelManager.Instance_.GlobalConsts_.MinDistanceToPlayerDeath)
+            {
                 Target.Death();
+            }
         }
     }
 }

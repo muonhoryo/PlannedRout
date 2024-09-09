@@ -31,6 +31,8 @@ namespace PlannedRout.LevelManagment
             public float WaveEffectSpeed;
             public float WaveEffectRadius;
             public float TailLengthMod;
+            //Audio
+            public float StepsSoundDelayTimeModifier;
 
             public GlobalConstData(
                                    float playerAFKTime,
@@ -45,7 +47,8 @@ namespace PlannedRout.LevelManagment
                                    float minDistanceToPlayerDeath,
                                    float waveEffectSpeed,
                                    float waveEffectRadius,
-                                   float tailLengthMod)
+                                   float tailLengthMod,
+                                   float stepsSoundDelayTimeModifier)
             {
                 PlayerAFKTime = playerAFKTime;
                 PointEatingDebuffTime = pointEatingDebuffTime;
@@ -60,6 +63,7 @@ namespace PlannedRout.LevelManagment
                 WaveEffectSpeed = waveEffectSpeed;
                 WaveEffectRadius = waveEffectRadius;
                 TailLengthMod = tailLengthMod;
+                StepsSoundDelayTimeModifier = stepsSoundDelayTimeModifier;
             }
         }
         [Serializable]

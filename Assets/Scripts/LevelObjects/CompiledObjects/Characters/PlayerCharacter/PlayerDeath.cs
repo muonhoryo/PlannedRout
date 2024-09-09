@@ -9,14 +9,18 @@ namespace PlannedRout
 {
     public sealed class PlayerDeath : MonoBehaviour
     {
-        public static event Action<int> LifeCountDecreasedEvent = delegate { };
+        public static event Action DeathEvent = delegate { };
 
-        [SerializeField] private string MainMenuSceneName;
+        private bool IsDead = false;
 
         public void Death()
         {
-            GamePause.Instance_.PauseGame();
-            SceneManager.LoadScene(MainMenuSceneName, LoadSceneMode.Single);
+            if (!IsDead)
+            {
+                IsDead = true;
+                GamePause.Instance_.PauseGame();
+                DeathEvent();
+            }
         }
     }
 }

@@ -11,8 +11,10 @@ namespace PlannedRout.LevelObjects.Characters
         public event Action<Vector2Int> ChangePositionEvent = delegate { };
         public event Action TunnelTransitionEvent = delegate { };
         public event Action<MovingDirection> ChangeDirectionEvent = delegate { };
+        public event Action StartMovingEvent = delegate { };
+        public event Action StopMovingEvent = delegate { };
 
-        public enum MovingDirection:byte
+        public enum MovingDirection : byte
         {
             Right,
             Top,
@@ -22,7 +24,7 @@ namespace PlannedRout.LevelObjects.Characters
         }
 
         [SerializeField] private MonoBehaviour SpeedComponent;
-        [SerializeField] private bool IsCollideDoor=true;
+        [SerializeField] private bool IsCollideDoor = true;
         public ISpeedProvider SpeedProvider_ { get; private set; }
 
         public Vector2Int CurrentPosition_ { get; private set; }
@@ -31,6 +33,7 @@ namespace PlannedRout.LevelObjects.Characters
         private Vector2 PhysicDirection;
 
         private float stepSize;
+        public bool IsMoving_ { get; private set; } = false;
 
         private void Update()
         {
@@ -62,13 +65,13 @@ namespace PlannedRout.LevelObjects.Characters
         private void SetMovingTarget()
         {
             Vector2Int physDir = PhysicDirection.GetIntegerPosition();
-            TargetPosition_ =new Vector2Int(CurrentPosition_.x+ physDir.x, CurrentPosition_.y + physDir.y);
+            TargetPosition_ = new Vector2Int(CurrentPosition_.x + physDir.x, CurrentPosition_.y + physDir.y);
         }
         private void ChangeCurrentCell()
         {
             if (TargetPosition_.x < 0)
             { //Teleport character to right side of map
-                transform.position = new Vector2(transform.position.x + LevelManager.Instance_.LevelData_.LvlMap.Width+1,
+                transform.position = new Vector2(transform.position.x + LevelManager.Instance_.LevelData_.LvlMap.Width + 1,
                     transform.position.y);
 
                 CurrentPosition_ = new Vector2Int(LevelManager.Instance_.LevelData_.LvlMap.Width - 1, TargetPosition_.y);
@@ -76,7 +79,7 @@ namespace PlannedRout.LevelObjects.Characters
             }
             else if (TargetPosition_.x >= LevelManager.Instance_.LevelData_.LvlMap.Width)
             { //Teleport character to left side of map
-                transform.position = new Vector2(transform.position.x - LevelManager.Instance_.LevelData_.LvlMap.Width-1,
+                transform.position = new Vector2(transform.position.x - LevelManager.Instance_.LevelData_.LvlMap.Width - 1,
                     transform.position.y);
 
                 CurrentPosition_ = new Vector2Int(0, TargetPosition_.y);
@@ -85,15 +88,15 @@ namespace PlannedRout.LevelObjects.Characters
             else if (TargetPosition_.y < 0)
             { //Teleport character to top of map
                 transform.position = new Vector2(transform.position.x,
-                    transform.position.y + LevelManager.Instance_.LevelData_.LvlMap.Height+1);
+                    transform.position.y + LevelManager.Instance_.LevelData_.LvlMap.Height + 1);
 
-                CurrentPosition_ = new Vector2Int(TargetPosition_.x,LevelManager.Instance_.LevelData_.LvlMap.Height- 1);
+                CurrentPosition_ = new Vector2Int(TargetPosition_.x, LevelManager.Instance_.LevelData_.LvlMap.Height - 1);
                 TunnelTransitionEvent();
             }
             else if (TargetPosition_.y >= LevelManager.Instance_.LevelData_.LvlMap.Height)
             { //Teleport character to bottom of map
                 transform.position = new Vector2(transform.position.x,
-                    transform.position.y - LevelManager.Instance_.LevelData_.LvlMap.Height-1);
+                    transform.position.y - LevelManager.Instance_.LevelData_.LvlMap.Height - 1);
 
                 CurrentPosition_ = new Vector2Int(TargetPosition_.x, 0);
                 TunnelTransitionEvent();
@@ -107,14 +110,14 @@ namespace PlannedRout.LevelObjects.Characters
         }
         private bool CheckMovingPossibility(Vector2Int target)
         {
-            if(!LevelManager.Instance_.CheckCellPosition(target.x,target.y))
+            if (!LevelManager.Instance_.CheckCellPosition(target.x, target.y))
                 return true;
             else
             {
                 ILevelPart targetCell = LevelManager.Instance_.GetCell(target.x, target.y);
                 if (targetCell != null &&
                     (targetCell.PartType_ == ILevelPart.LevelPartType.Wall ||
-                    (IsCollideDoor &&targetCell.PartType_ == ILevelPart.LevelPartType.Door)))
+                    (IsCollideDoor && targetCell.PartType_ == ILevelPart.LevelPartType.Door)))
                 {
                     return false;
                 }
@@ -142,7 +145,7 @@ namespace PlannedRout.LevelObjects.Characters
                 }
             }
         }
-        private void InternalChangeDirection(MovingDirection direction,bool isEqualHorizontality)
+        private void InternalChangeDirection(MovingDirection direction, bool isEqualHorizontality)
         {
             void SetDirectionAsCurrent()
             {
@@ -188,17 +191,21 @@ namespace PlannedRout.LevelObjects.Characters
                 {
                     transform.position = new Vector2(CurrentPosition_.x, CurrentPosition_.y);
                 }
+                ChangeDirectionEvent(direction);
             }
-            ChangeDirectionEvent(direction);
         }
         private void StartMoving()
         {
             enabled = true;
+            IsMoving_ = true;
+            StartMovingEvent();
         }
         private void StopMoving()
         {
             enabled = false;
-            transform.position =new Vector2(CurrentPosition_.x,CurrentPosition_.y);
+            IsMoving_ = false;
+            transform.position = new Vector2(CurrentPosition_.x, CurrentPosition_.y);
+            StopMovingEvent();
         }
 
         private void Awake()
@@ -207,13 +214,32 @@ namespace PlannedRout.LevelObjects.Characters
             if (SpeedProvider_ == null)
                 throw new System.Exception("Missing speed provider.");
 
+            enabled = false;
             LevelManager.LevelInitializedEvent += ReferredInitialization;
+            GamePause.GamePausedEvent += GamePaused;
+            GamePause.GameUnpausedEvent += GameUnpaused;
+        }
+        private void OnDestroy()
+        {
+            GamePause.GamePausedEvent -= GamePaused;
+            GamePause.GameUnpausedEvent -= GameUnpaused;
         }
         private void ReferredInitialization()
         {
             LevelManager.LevelInitializedEvent -= ReferredInitialization;
             CurrentPosition_ = transform.position.GetIntegerPosition();
             InternalChangeDirection(MovingDirection.Bottom, true);
+        }
+
+        private void GamePaused()
+        {
+            if (IsMoving_)
+                enabled = false;
+        }
+        private void GameUnpaused()
+        {
+            if (!IsMoving_)
+                enabled = true;
         }
     }
 }

@@ -28,5 +28,26 @@ namespace PlannedRout.PlayerControl
                 CharacterMovComponent.ChangeDirection(axisInput_Vertical < 0 ? MovingComponent.MovingDirection.Bottom : MovingComponent.MovingDirection.Top);
             }
         }
+        private void Awake()
+        {
+            GamePause.GamePausedEvent += GamePaused;
+        }
+        private void OnDestroy()
+        {
+            GamePause.GamePausedEvent -= GamePaused;
+            GamePause.GameUnpausedEvent -= GameUnpaused;
+        }
+        private void GamePaused()
+        {
+            GamePause.GamePausedEvent -= GamePaused;
+            GamePause.GameUnpausedEvent += GameUnpaused;
+            enabled = false;
+        }
+        private void GameUnpaused()
+        {
+            GamePause.GamePausedEvent += GamePaused;
+            GamePause.GameUnpausedEvent -= GameUnpaused;
+            enabled = true;
+        }
     }
 }

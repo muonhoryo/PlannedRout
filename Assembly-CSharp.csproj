@@ -61,10 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\DEBUGONLY\ExitGameControl.cs" />
-    <Compile Include="Assets\Scripts\GameSceneTransitionManagment\MainMenuInteractions.cs" />
+    <Compile Include="Assets\Scripts\Others\Visual\OnMovingAnimation.cs" />
     <Compile Include="Assets\Scripts\GameProgressManagment\ProgressManager.cs" />
     <Compile Include="Assets\Scripts\Others\Visual\MovingDirRotation.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyCharacter\EnemyDeathBringing.cs" />
+    <Compile Include="Assets\Scripts\Others\Audio\DeathSound.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PlayerCharacter\PlayerDeath.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\States\DispersionBehaviourState.cs" />
     <Compile Include="Assets\Scripts\GameSceneTransitionManagment\GameEnding.cs" />
@@ -80,14 +81,19 @@
     <Compile Include="Assets\Scripts\LevelManagment\LevelLoadingData.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CollectableObject_ScoreIncreaser.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Moving\EnemySpeedComponent.cs" />
-    <Compile Include="Assets\Scripts\LevelManagment\LevelSerialization.cs" />
     <Compile Include="Assets\Scripts\Others\Visual\WaveMotionEffect.cs" />
+    <Compile Include="Assets\Scripts\LevelManagment\LevelSerialization.cs" />
+    <Compile Include="Assets\Scripts\Others\Visual\OnPauseAnimatorStoping.cs" />
     <Compile Include="Assets\Scripts\PlayerControl\PlayerController_Character.cs" />
     <Compile Include="Assets\Scripts\Others\ProgressBar.cs" />
+    <Compile Include="Assets\Scripts\Others\Audio\MovingSound.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\PathFinding.cs" />
+    <Compile Include="Assets\Scripts\GUI\MainMenuButton.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Point.cs" />
+    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Animation\MainMenuTransition.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Moving\SpeedComponent.cs" />
     <Compile Include="Assets\Scripts\Others\TimersManager.cs" />
+    <Compile Include="Assets\Scripts\Others\Audio\PointCollectSound.cs" />
     <Compile Include="Assets\Scripts\Others\CameraInitialization.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Wall.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PlayerCharacter\PointEatingSlower.cs" />
@@ -95,19 +101,24 @@
     <Compile Include="Assets\Scripts\LevelManagment\ILevelPart.cs" />
     <Compile Include="Assets\Scripts\Others\GUISizeInitialization.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyControl\StatesControl\OnStartStatesAssigner.cs" />
+    <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\Animation\WinAnimationEndEvent.cs" />
     <Compile Include="Assets\Scripts\Extensions.cs" />
+    <Compile Include="Assets\Scripts\GUI\MainMenuButton_Start.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\EnemyCharacter\OnProgressEnemyAcceleration.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\OnEventSpeedModificator.cs" />
     <Compile Include="Assets\Scripts\GameSceneTransitionManagment\GameInitialization.cs" />
     <Compile Include="Assets\Scripts\Others\GUIAdditionalInfoInitialization.cs" />
     <Compile Include="Assets\Scripts\Others\Visual\TailLengthInitialization.cs" />
     <Compile Include="Assets\Scripts\LevelObjects\CompiledObjects\Characters\PlayerCharacter\PointCollectingComponent.cs" />
+    <Compile Include="Assets\Scripts\Others\Visual\LoseAnimationTransition.cs" />
+    <Compile Include="Assets\Scripts\Others\Audio\MainMenuButtonsSounds.cs" />
     <Compile Include="Assets\Scripts\GameSceneTransitionManagment\GamePause.cs" />
     <Compile Include="Assets\Scripts\LevelManagment\LevelManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\Bar.shader" />
     <None Include="Assets\Libraries\MuonhoryoLibrary.dll" />
+    <None Include="Assets\Shaders\Sprite.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
