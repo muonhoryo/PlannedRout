@@ -1,5 +1,6 @@
 
 
+using PlannedRout.LevelManagment;
 using PlannedRout.LevelObjects.Characters;
 using UnityEngine;
 
@@ -14,23 +15,52 @@ namespace PlannedRout.PlayerControl
         private float axisInput_Horizontal;
         private float axisInput_Vertical;
 
+        private float BackToMainMenuTime=float.MaxValue;
+        private bool IsActiveInput=false;
+
         private void Update()
         {
             axisInput_Horizontal = Input.GetAxis(AxisInputName_Horizontal);
             axisInput_Vertical = Input.GetAxis(AxisInputName_Vertical);
 
+            void ChangeDirection(MovingComponent.MovingDirection direction)
+            {
+                CharacterMovComponent.ChangeDirection(direction);
+                if (!IsActiveInput)
+                    IsActiveInput = true;
+            }
+
             if (axisInput_Horizontal!=0)
             {
-                CharacterMovComponent.ChangeDirection(axisInput_Horizontal<0?MovingComponent.MovingDirection.Left:MovingComponent.MovingDirection.Right);
+                ChangeDirection(axisInput_Horizontal<0?MovingComponent.MovingDirection.Left:MovingComponent.MovingDirection.Right);
             }
             else if (axisInput_Vertical != 0)
             {
-                CharacterMovComponent.ChangeDirection(axisInput_Vertical < 0 ? MovingComponent.MovingDirection.Bottom : MovingComponent.MovingDirection.Top);
+                ChangeDirection(axisInput_Vertical < 0 ? MovingComponent.MovingDirection.Bottom : MovingComponent.MovingDirection.Top);
+            }
+            else
+            {
+                if (Time.realtimeSinceStartup >= BackToMainMenuTime)
+                    LevelManager.Instance_.PlayerCharacter_.GetComponent<PlayerDeath>().Death();
+                else
+                {
+                    if (IsActiveInput)
+                    {
+                        IsActiveInput = false;
+                        BackToMainMenuTime = Time.realtimeSinceStartup+LevelManager.Instance_.GlobalConsts_.BackMainMenuTime;
+                    }
+                }
             }
         }
         private void Awake()
         {
             GamePause.GamePausedEvent += GamePaused;
+            LevelManager.LevelInitializedEvent += ReferredInitialization;
+        }
+        private void ReferredInitialization()
+        {
+            LevelManager.LevelInitializedEvent -= ReferredInitialization;
+            BackToMainMenuTime = Time.realtimeSinceStartup + LevelManager.Instance_.GlobalConsts_.BackMainMenuTime;
         }
         private void OnDestroy()
         {

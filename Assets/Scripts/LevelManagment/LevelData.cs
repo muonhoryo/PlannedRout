@@ -14,6 +14,7 @@ namespace PlannedRout.LevelManagment
             //Times
             public float PlayerAFKTime;
             public float PointEatingDebuffTime;
+            public float BackMainMenuTime;
             //Speed buffs
             public float EnemyPointEatingSpeedMod;
             //Speed debuffs
@@ -37,6 +38,7 @@ namespace PlannedRout.LevelManagment
             public GlobalConstData(
                                    float playerAFKTime,
                                    float pointEatingDebuffTime,
+                                   float backMainMenuTime,
                                    float enemyPointEatingSpeedMod,
                                    float playerPointEatingSpeedMod,
                                    float playerSpeed,
@@ -52,6 +54,7 @@ namespace PlannedRout.LevelManagment
             {
                 PlayerAFKTime = playerAFKTime;
                 PointEatingDebuffTime = pointEatingDebuffTime;
+                BackMainMenuTime = backMainMenuTime;
                 EnemyPointEatingSpeedMod = enemyPointEatingSpeedMod;
                 PlayerPointEatingSpeedMod = playerPointEatingSpeedMod;
                 PlayerSpeed = playerSpeed;
