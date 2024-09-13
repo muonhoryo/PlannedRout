@@ -10,13 +10,13 @@ namespace PlannedRout.Audio
 
         private void Awake()
         {
-            PlayerDeath.DeathEvent += Death;
+            PlayerDeath.LifeCountDecreasedEvent+= Death;
         }
         private void OnDestroy()
         {
-            PlayerDeath.DeathEvent -= Death;
+            PlayerDeath.LifeCountDecreasedEvent-= Death;
         }
-        private void Death()
+        private void Death(int i)
         {
             Source.Play();
         }

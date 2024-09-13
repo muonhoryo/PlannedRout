@@ -37,6 +37,11 @@ namespace PlannedRout.LevelObjects.Characters
         private void Awake()
         {
             LevelManager.LevelInitializedEvent += ReferredInitialization;
+            LevelReseter.LevelWasResetedEvent += LevelReseted;
+        }
+        private void OnDestroy()
+        {
+            LevelReseter.LevelWasResetedEvent -= LevelReseted;
         }
         private void ReferredInitialization()
         {
@@ -99,5 +104,10 @@ namespace PlannedRout.LevelObjects.Characters
             CurrentCornerIndex = MovingScript.CurrentPosition_ != Corners[0] ? 0 : 1;
         }
         void EnemyBehaviour.IEnemyBehaviourState.OnStateExit() { }
+
+        private void LevelReseted()
+        {
+            CurrentCornerIndex = 0;
+        }
     }
 }

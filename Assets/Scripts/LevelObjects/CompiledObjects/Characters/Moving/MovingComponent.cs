@@ -218,11 +218,13 @@ namespace PlannedRout.LevelObjects.Characters
             LevelManager.LevelInitializedEvent += ReferredInitialization;
             GamePause.GamePausedEvent += GamePaused;
             GamePause.GameUnpausedEvent += GameUnpaused;
+            LevelReseter.LevelWasResetedEvent += LevelReseted;
         }
         private void OnDestroy()
         {
             GamePause.GamePausedEvent -= GamePaused;
             GamePause.GameUnpausedEvent -= GameUnpaused;
+            LevelReseter.LevelWasResetedEvent -= LevelReseted;
         }
         private void ReferredInitialization()
         {
@@ -238,8 +240,16 @@ namespace PlannedRout.LevelObjects.Characters
         }
         private void GameUnpaused()
         {
-            if (!IsMoving_)
+            if (IsMoving_)
+            {
                 enabled = true;
+            }
+        }
+        private void LevelReseted()
+        {
+            CurrentPosition_ =new Vector2Int((int)transform.position.x,(int)transform.position.y);
+            StopMoving();
+            InternalChangeDirection(MovingDirection_, true);
         }
     }
 }

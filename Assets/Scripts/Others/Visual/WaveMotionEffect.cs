@@ -9,6 +9,7 @@ namespace PlannedRout.Visual
     public sealed class WaveMotionEffect : MonoBehaviour
     {
         [SerializeField] private MovingComponent Owner;
+        [SerializeField] private GameObject TrailObj;
 
         private MovingComponent.MovingDirection MovingDirection;
         private float TargetRotation;
@@ -20,6 +21,7 @@ namespace PlannedRout.Visual
             LevelManager.LevelInitializedEvent += ReferredInitialization;
             GamePause.GamePausedEvent += GamePaused;
             GamePause.GameUnpausedEvent += GameUnpaused;
+            LevelReseter.LevelWasResetedEvent += LevelReseted;
         }
         private void ReferredInitialization()
         {
@@ -45,6 +47,7 @@ namespace PlannedRout.Visual
             Owner.ChangeDirectionEvent -= ChangeDirection;
             GamePause.GamePausedEvent -= GamePaused;
             GamePause.GameUnpausedEvent -= GameUnpaused;
+            LevelReseter.LevelWasResetedEvent -= LevelReseted;
         }
         private void FixedUpdate()
         {
@@ -88,6 +91,12 @@ namespace PlannedRout.Visual
         private void GameUnpaused()
         {
             enabled = true;
+        }
+        private void LevelReseted()
+        {
+            var renderers= TrailObj.GetComponentsInChildren<TrailRenderer>();
+            foreach(var ren in renderers)
+                ren.Clear();
         }
     }
 }

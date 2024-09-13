@@ -9,18 +9,24 @@ namespace PlannedRout
 {
     public sealed class PlayerDeath : MonoBehaviour
     {
-        public static event Action DeathEvent = delegate { };
+        public static event Action<int> LifeCountDecreasedEvent = delegate { };
 
-        private bool IsDead = false;
+        public int RemainedLifesCount_ { get; private set; }
+
+        private void Awake()
+        {
+            LevelManager.LevelInitializedEvent += ReferredInitialization;
+        }
+        private void ReferredInitialization()
+        {
+            LevelManager.LevelInitializedEvent -= ReferredInitialization;
+            RemainedLifesCount_ = LevelManager.Instance_.GlobalConsts_.PlayerLifesCount;
+        }
 
         public void Death()
         {
-            if (!IsDead)
-            {
-                IsDead = true;
-                GamePause.Instance_.PauseGame();
-                DeathEvent();
-            }
+            RemainedLifesCount_--;
+            LifeCountDecreasedEvent(RemainedLifesCount_);
         }
     }
 }

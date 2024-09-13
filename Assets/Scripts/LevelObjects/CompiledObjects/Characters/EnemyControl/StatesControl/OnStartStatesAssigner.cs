@@ -23,6 +23,7 @@ namespace PlannedRout.LevelObjects.Characters
         private void Awake()
         {
             LevelManager.LevelInitializedEvent += ReferredInitialization;
+            LevelReseter.LevelWasResetedPostEvent += LevelReseted;
         }
         private void ReferredInitialization()
         {
@@ -47,9 +48,11 @@ namespace PlannedRout.LevelObjects.Characters
         private void OnDestroy()
         {
             ProgressManager.PointCollectedEvent -= PointCollected;
+            LevelReseter.LevelWasResetedPostEvent -= LevelReseted;
         }
         private void ActivateEnemiesRealization()
         {
+            FreeEnemiesCount = 1;
             Enemies[0].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Dispersion);
             Enemies[1].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Idle);
             Enemies[2].SelectBehaviourState(EnemyBehaviour.BehaviourStateType.Idle);
@@ -105,6 +108,16 @@ namespace PlannedRout.LevelObjects.Characters
             StopCoroutine(EnemyRealizationCoroutine);
             EnemyRealizationCoroutine = null;
             ProgressManager.PointCollectedEvent -= PointCollected;
+        }
+
+        private void LevelReseted()
+        {
+            if(FreeEnemiesCount<4)
+                Enemies[FreeEnemiesCount].ChangeBehaviourStateEvent -= EnemyReleased;
+            ActivateEnemiesRealization();
+            if(EnemyRealizationCoroutine!=null)
+                StopCoroutine(EnemyRealizationCoroutine);
+            EnemyRealizationCoroutine = StartCoroutine(ReleaseNextEnemy());
         }
     }
 }

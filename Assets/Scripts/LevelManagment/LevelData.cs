@@ -28,6 +28,7 @@ namespace PlannedRout.LevelManagment
             //Others
             public float MaxToTargetDistanceToChangeMovDirection;
             public float MinDistanceToPlayerDeath;
+            public int PlayerLifesCount;
             //Visual effects
             public float WaveEffectSpeed;
             public float WaveEffectRadius;
@@ -47,6 +48,7 @@ namespace PlannedRout.LevelManagment
                                    int nextRoomExitPointValue,
                                    float maxToTargetDistanceToChangeMovDirection,
                                    float minDistanceToPlayerDeath,
+                                   int playerLifesCount,
                                    float waveEffectSpeed,
                                    float waveEffectRadius,
                                    float tailLengthMod,
@@ -63,6 +65,7 @@ namespace PlannedRout.LevelManagment
                 NextRoomExitPointValue = nextRoomExitPointValue;
                 MaxToTargetDistanceToChangeMovDirection = maxToTargetDistanceToChangeMovDirection;
                 MinDistanceToPlayerDeath = minDistanceToPlayerDeath;
+                PlayerLifesCount = playerLifesCount;
                 WaveEffectSpeed = waveEffectSpeed;
                 WaveEffectRadius = waveEffectRadius;
                 TailLengthMod = tailLengthMod;

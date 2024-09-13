@@ -47,6 +47,11 @@ namespace PlannedRout.LevelObjects.Characters
                 throw new System.Exception("Missing MovingComponent.");
 
             MovingScript.ChangePositionEvent += ChangePositionAction;
+            LevelReseter.LevelWasResetedPostEvent += LevelReseted;
+        }
+        private void OnDestroy()
+        {
+            LevelReseter.LevelWasResetedPostEvent -= LevelReseted;
         }
         public IEnemyBehaviourState CurrentState_ { get;private set; }
         public Vector2Int Target_ { get; private set; }
@@ -139,6 +144,11 @@ namespace PlannedRout.LevelObjects.Characters
                     break;
             }
             ChangeBehaviourStateEvent(stateType);
+        }
+
+        private void LevelReseted()
+        {
+            StartMovingToTarget();
         }
     }
 }

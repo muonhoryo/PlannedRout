@@ -12,6 +12,13 @@ namespace PlannedRout.LevelObjects.Characters
         private void Awake()
         {
             LevelManager.LevelInitializedEvent += ReferredInitialization;
+            GamePause.GamePausedEvent += GamePaused;
+            GamePause.GameUnpausedEvent += GameUnpaused;
+        }
+        private void OnDestroy()
+        {
+            GamePause.GamePausedEvent -= GamePaused;
+            GamePause.GameUnpausedEvent -= GameUnpaused;
         }
         private void ReferredInitialization()
         {
@@ -25,6 +32,14 @@ namespace PlannedRout.LevelObjects.Characters
             {
                 Target.Death();
             }
+        }
+        private void GamePaused()
+        {
+            enabled = false;
+        }
+        private void GameUnpaused()
+        {
+            enabled = true;
         }
     }
 }

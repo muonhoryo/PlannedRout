@@ -26,6 +26,7 @@ namespace PlannedRout
         {
             if (!IsPaused_)
             {
+                IsPaused_ = true;
                 GamePausedEvent();
             }
         }
@@ -33,6 +34,7 @@ namespace PlannedRout
         {
             if (IsPaused_)
             {
+                IsPaused_ = false;
                 GameUnpausedEvent();
             }
         }
