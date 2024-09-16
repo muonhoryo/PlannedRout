@@ -196,6 +196,13 @@ namespace PlannedRout.LevelObjects.Characters
         }
         private void StartMoving()
         {
+            Vector2Int physDir= PhysicDirection.GetIntegerPosition();
+            if(!CheckMovingPossibility(new Vector2Int(CurrentPosition_.x + physDir.x, CurrentPosition_.y + physDir.y)))
+            {
+                StopMoving();
+                return;
+            }
+
             enabled = true;
             IsMoving_ = true;
             StartMovingEvent();

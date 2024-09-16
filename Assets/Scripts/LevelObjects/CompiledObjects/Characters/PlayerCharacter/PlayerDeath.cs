@@ -11,11 +11,13 @@ namespace PlannedRout
     {
         public static event Action<int> LifeCountDecreasedEvent = delegate { };
 
+        public static PlayerDeath Instance_ { get; private set; }
         public int RemainedLifesCount_ { get; private set; }
 
         private void Awake()
         {
             LevelManager.LevelInitializedEvent += ReferredInitialization;
+            Instance_ = this;
         }
         private void ReferredInitialization()
         {
