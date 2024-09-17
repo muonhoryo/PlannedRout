@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PlannedRout.GameScoreManagment;
 using PlannedRout.LevelManagment;
+using PlannedRout.LevelObjects.Characters;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,7 @@ namespace PlannedRout.Visual
         [SerializeField] private OnDeathMessageGenerating DeathMessage;
         [SerializeField] private OnDeathMessageGenerating WinMessage;
         [SerializeField] private OnDeathMessageGenerating LoseMessage;
+        [SerializeField] private DeathAnimationEvent DeathAnimation;
 
         private void Awake()
         {
@@ -36,6 +38,7 @@ namespace PlannedRout.Visual
             }
             else
             {
+                DeathAnimation.IsBackToMenu = true;
                 if (count < LevelManager.Instance_.GlobalConsts_.CollectedPointToWin)
                 {
                     LoseMessage.Generate();

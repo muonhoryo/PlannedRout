@@ -50,8 +50,10 @@ namespace PlannedRout.PlayersRegistry
             }
             public void RemoveLastSymbol() 
             {
-                if(FieldText_Main_.Length>0)
-                    FieldText_Main_=FieldText_Main_.Remove(FieldText_Main_.Length - 1);
+                if (FieldText_Main_.Length > 0)
+                { 
+                    FieldText_Main_ = FieldText_Main_.Remove(FieldText_Main_.Length - 1);
+                }
                 ResetInputSymbolShowing();
             }
 
@@ -93,6 +95,8 @@ namespace PlannedRout.PlayersRegistry
         [SerializeField] private string AcceptInputName;
         [SerializeField] private string RemoveLastInputName;
         [SerializeField] private StartButton StartButton;
+        [SerializeField] private float RemoveLastDelayRate;
+        [SerializeField] private float RemoveLastDelayRate_Holding; 
 
         private Text HandledInputField;
         private RegistryActiveFieldHandler CurrentInputHandler;
@@ -100,6 +104,8 @@ namespace PlannedRout.PlayersRegistry
 
         private bool IsCheckPlayerData = false;
         private PlayerData? GottenPlayerData = null;
+        private bool CanRemove= true;
+        private bool IsHolding = false;
 
         private void Awake()
         {
@@ -112,22 +118,42 @@ namespace PlannedRout.PlayersRegistry
             if (Input.GetButtonDown(UpInputName))
             {
                 MoveUp();
+                Input.ResetInputAxes();
             }
             else if (Input.GetButtonDown(DownInputName))
             {
                 MoveDown();
+                Input.ResetInputAxes();
             }
             else
             {
                 if (Input.GetButtonDown(AcceptInputName))
                 {
                     Accept();
+                    Input.ResetInputAxes();
                 }
                 else if (CurrentInputHandler != null)
                 {
-                   if (Input.GetButtonDown(RemoveLastInputName))
+                    if (Input.GetButtonUp(RemoveLastInputName))
+                    {
+                        IsHolding = false;
+                    }
+                   else if (Input.GetButton(RemoveLastInputName))
                    {
-                       RemoveLast();
+                        if (CanRemove)
+                        {
+                            RemoveLast();
+                            if (IsHolding)
+                            {
+                                StartCoroutine(RemoveLastDelay(RemoveLastDelayRate_Holding));
+                            }
+                            else
+                            {
+                                StartCoroutine(RemoveLastDelay(RemoveLastDelayRate));
+                                IsHolding = true;
+                            }
+                            StartCoroutine(RemoveLastDelay(RemoveLastDelayRate));
+                        }
                    }
                    else
                    {
@@ -309,6 +335,12 @@ namespace PlannedRout.PlayersRegistry
                 StartGame();
             }
             PlayersDataHandler.Instance_.PlayerHasCheckedEvent += StartGameAction;
+        }
+        private IEnumerator RemoveLastDelay(float delay)
+        {
+            CanRemove = false;
+            yield return new WaitForSeconds(delay);
+            CanRemove = true;
         }
 
         private void AssignNewHandler(Text newHandledInputField,RegistryActiveFieldHandler.InputFieldType fieldType)

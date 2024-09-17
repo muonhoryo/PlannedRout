@@ -335,7 +335,6 @@ namespace PlannedRout.LevelManagment
 
                 bool isExistLvlData = LvlData != null;
 
-                string additionalInfo = isExistLvlData ? LevelData_.GUIAdditionalInformationText : "";
                 float cameraSize = isExistLvlData ? LevelData_.CameraImageSize : 1;
                 float cameraLevelOffset = isExistLvlData ? LevelData_.CameraLevelOffset : 0;
                 float guiSize = isExistLvlData ? LevelData_.GUISize : 1;
@@ -352,7 +351,6 @@ namespace PlannedRout.LevelManagment
                     enemySpawnPoint_Pink: EnemyPos_Pink,
                     enemySpawnPoint_Orange: EnemyPos_Orange,
                     globalConsts: globalConsts,
-                    guiAdditionalInformationText: additionalInfo,
                     cameraImageSize: cameraSize,
                     cameraLevelOffset: cameraLevelOffset,
                     guiSize: guiSize);

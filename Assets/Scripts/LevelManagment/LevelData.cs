@@ -150,7 +150,6 @@ namespace PlannedRout.LevelManagment
         public Vector2Int EnemySpawnPoint_Pink;
         public Vector2Int EnemySpawnPoint_Orange;
         public GlobalConstData GlobalConsts;
-        public string GUIAdditionalInformationText;
         public float CameraImageSize;
         public float CameraLevelOffset;
         public float GUISize;
@@ -162,7 +161,6 @@ namespace PlannedRout.LevelManagment
                          Vector2Int enemySpawnPoint_Pink,
                          Vector2Int enemySpawnPoint_Orange,
                          GlobalConstData globalConsts,
-                         string guiAdditionalInformationText,
                          float cameraImageSize,
                          float cameraLevelOffset,
                          float guiSize)
@@ -174,7 +172,6 @@ namespace PlannedRout.LevelManagment
             EnemySpawnPoint_Pink = enemySpawnPoint_Pink;
             EnemySpawnPoint_Orange= enemySpawnPoint_Orange;
             GlobalConsts = globalConsts;
-            GUIAdditionalInformationText = guiAdditionalInformationText;
             CameraImageSize= cameraImageSize;
             CameraLevelOffset = cameraLevelOffset;
             GUISize = guiSize;
