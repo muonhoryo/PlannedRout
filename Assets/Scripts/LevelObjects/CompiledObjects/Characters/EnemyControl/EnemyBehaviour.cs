@@ -69,6 +69,20 @@ namespace PlannedRout.LevelObjects.Characters
             StartMovingToTarget();
         }
 
+        private void ActivateMovingComponent()
+        {
+            float dist = Vector2Int.Distance(MovingScript.CurrentPosition_, PathToTarget[CurrentPathTarget]);
+            if (dist > 1 || dist <= 0.5)
+            {
+                Debug.Log("CurrPos:" + MovingScript.CurrentPosition_);
+                Debug.Log("Target:" + PathToTarget[CurrentPathTarget]);
+                StartMovingToTarget();
+                return;
+            }
+
+            MovingScript.ChangeDirection(GetDirectionBetweenPoints(MovingScript.CurrentPosition_, PathToTarget[CurrentPathTarget]));
+            CurrentPathTarget++;
+        }
         private void ChangePositionAction(Vector2Int position)
         {
             if (position == Target_)
@@ -83,8 +97,7 @@ namespace PlannedRout.LevelObjects.Characters
             }
             else
             {
-                MovingScript.ChangeDirection(GetDirectionBetweenPoints(MovingScript.CurrentPosition_, PathToTarget[CurrentPathTarget]));
-                CurrentPathTarget++;
+                ActivateMovingComponent();
             }
         }
 
@@ -129,8 +142,8 @@ namespace PlannedRout.LevelObjects.Characters
             }
             SelectTargetFromState(CurrentState_.Target_);
 
-            MovingScript.ChangeDirection(GetDirectionBetweenPoints(MovingScript.CurrentPosition_, PathToTarget[CurrentPathTarget]));
-            CurrentPathTarget++;
+
+            ActivateMovingComponent();
         }
         public void SelectBehaviourState(BehaviourStateType stateType)
         {

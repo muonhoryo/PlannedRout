@@ -1,6 +1,7 @@
 
 
 using System;
+using System.Collections;
 using PlannedRout.LevelManagment;
 using UnityEngine;
 
@@ -35,6 +36,48 @@ namespace PlannedRout.LevelObjects.Characters
         private float stepSize;
         public bool IsMoving_ { get; private set; } = false;
 
+        private IEnumerator BugChecking()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(0.5f);
+
+                Vector2Int physDir = PhysicDirection.GetIntegerPosition();
+                void BugFoundAction()
+                {
+                    Debug.Log("currPos:" + CurrentPosition_);
+                    Debug.Log("physDir:" + PhysicDirection);
+                    Debug.Log("parsedPhysDir:" + physDir);
+                    Debug.Log("target:" + new Vector2Int(CurrentPosition_.x + physDir.x, CurrentPosition_.y + physDir.y));
+                    transform.position = new Vector3(CurrentPosition_.x,CurrentPosition_.y,transform.position.z);
+                    ChangePositionEvent(CurrentPosition_);
+                    StopMoving();
+                }
+                if (Vector2Int.Distance(CurrentPosition_, TargetPosition_) > 3)
+                {
+                    BugFoundAction();
+                }
+                else
+                {
+                    Vector2Int vecdiff = TargetPosition_ - CurrentPosition_;
+                    Vector2 parsedVecdiff = new Vector2(vecdiff.x, vecdiff.y);
+                    Vector2 reqDir = parsedVecdiff.normalized;
+                    if (Vector2.Dot(reqDir, parsedVecdiff) < 0.75f)
+                    {
+                        BugFoundAction();
+                    }
+                    else
+                    {
+                        Vector2Int currPos = new Vector2Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y));
+                        if (LevelManager.Instance_.GetCell(currPos.x, currPos.y) != null &&
+                            LevelManager.Instance_.GetCell(currPos.x, currPos.y).PartType_ == ILevelPart.LevelPartType.Wall)
+                        {
+                            BugFoundAction();
+                        }
+                    }
+                }
+            }
+        }
         private void Update()
         {
             stepSize = SpeedProvider_.Speed_.CurrentValue * Time.deltaTime;
@@ -65,7 +108,7 @@ namespace PlannedRout.LevelObjects.Characters
         private void SetMovingTarget()
         {
             Vector2Int physDir = PhysicDirection.GetIntegerPosition();
-            TargetPosition_ = new Vector2Int(CurrentPosition_.x + physDir.x, CurrentPosition_.y + physDir.y);
+            TargetPosition_ = new Vector2Int(CurrentPosition_.x + physDir.x, CurrentPosition_.y + physDir.y); 
         }
         private void ChangeCurrentCell()
         {
@@ -226,6 +269,8 @@ namespace PlannedRout.LevelObjects.Characters
             GamePause.GamePausedEvent += GamePaused;
             GamePause.GameUnpausedEvent += GameUnpaused;
             LevelReseter.LevelWasResetedEvent += LevelReseted;
+
+            StartCoroutine(BugChecking());
         }
         private void OnDestroy()
         {

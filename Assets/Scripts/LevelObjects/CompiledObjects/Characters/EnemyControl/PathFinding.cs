@@ -63,6 +63,7 @@ namespace PlannedRout
                     {
                         if (!checkedCells.Contains(checkingPoint))
                         {
+                            checkedCells.Add(checkingPoint);
                             ILevelPart cell = LevelManager.Instance_.GetCell(checkingPoint.x, checkingPoint.y);
                             if (cell == null || cell.PartType_ != ILevelPart.LevelPartType.Wall)
                             {
@@ -87,7 +88,6 @@ namespace PlannedRout
                     {
                         isAlreadyHasWay=true;
                         associatedPath.Add(right);
-                        checkedCells.Add(right);
                         findQueue.Enqueue((associatedPath,right));
                     }
 
@@ -103,7 +103,6 @@ namespace PlannedRout
                                 associatedPath.Add(checkedPoint);
                                 findQueue.Enqueue((associatedPath, checkedPoint));
                             }
-                            checkedCells.Add(checkedPoint);
                         }
                     }
                     void AddNewPath(Vector2Int newPathLastPoint)
