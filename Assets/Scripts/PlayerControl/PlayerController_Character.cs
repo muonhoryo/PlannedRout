@@ -41,7 +41,10 @@ namespace PlannedRout.PlayerControl
             else
             {
                 if (Time.realtimeSinceStartup >= BackToMainMenuTime)
+                {
                     LevelManager.Instance_.PlayerCharacter_.GetComponent<PlayerDeath>().Death();
+                    BackToMainMenuTime = Time.realtimeSinceStartup + LevelManager.Instance_.GlobalConsts_.BackMainMenuTime;
+                }
                 else
                 {
                     if (IsActiveInput)

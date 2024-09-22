@@ -24,6 +24,7 @@ namespace PlannedRout.LevelObjects.Characters
         {
             LevelManager.LevelInitializedEvent += ReferredInitialization;
             LevelReseter.LevelWasResetedPostEvent += LevelReseted;
+            GamePause.GamePausedEvent += StopRealization;
         }
         private void ReferredInitialization()
         {
@@ -49,6 +50,7 @@ namespace PlannedRout.LevelObjects.Characters
         {
             ProgressManager.PointCollectedEvent -= PointCollected;
             LevelReseter.LevelWasResetedPostEvent -= LevelReseted;
+            GamePause.GamePausedEvent -= StopRealization;
         }
         private void ActivateEnemiesRealization()
         {
@@ -105,8 +107,11 @@ namespace PlannedRout.LevelObjects.Characters
         }
         private void StopRealization()
         {
-            StopCoroutine(EnemyRealizationCoroutine);
-            EnemyRealizationCoroutine = null;
+            if (EnemyRealizationCoroutine != null)
+            {
+                StopCoroutine(EnemyRealizationCoroutine);
+                EnemyRealizationCoroutine = null;
+            }
             ProgressManager.PointCollectedEvent -= PointCollected;
         }
 

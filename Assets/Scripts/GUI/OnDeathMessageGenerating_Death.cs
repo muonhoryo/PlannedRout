@@ -15,6 +15,7 @@ namespace PlannedRout.Visual
         [SerializeField] private string AltMessage_Two;
 
         [SerializeField] private string SwapPartIdentifier_LifeCount;
+        [SerializeField] private string SwapPartIdentifier_CollectedPoints;
         public override void Generate()
         {
             string mesge;
@@ -37,6 +38,7 @@ namespace PlannedRout.Visual
             StringBuilder str = new StringBuilder(mesge);
             str.Replace("\\n", "\n");
             str.Replace(SwapPartIdentifier_LifeCount, PlayerDeath.Instance_.RemainedLifesCount_.ToString());
+            str.Replace(SwapPartIdentifier_CollectedPoints, ProgressManager.Instance_.CollectedPointsCount_.ToString());
             Owner.text=str.ToString();
         }
     }

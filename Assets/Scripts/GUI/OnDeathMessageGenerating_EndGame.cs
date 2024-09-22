@@ -17,7 +17,7 @@ namespace PlannedRout.Visual
         [SerializeField] private string AltMessage_One;
         [SerializeField] private string AltMessage_Two;
 
-        [SerializeField] private string SwapPartIdentifier_Collected;
+        [SerializeField] private string SwapPartIdentifier_CollectedRecord;
         [SerializeField] private string SwapPartIdentifier_Max;
         [SerializeField] private string SwapPartIdentifier_Name;
         [SerializeField] private string SwapPartIdentifier_Number;
@@ -42,7 +42,7 @@ namespace PlannedRout.Visual
             }
             StringBuilder str = new StringBuilder(mesge);
             str.Replace("\\n", "\n");
-            str.Replace(SwapPartIdentifier_Collected, ProgressManager.Instance_.CollectedPointsCount_.ToString());
+            str.Replace(SwapPartIdentifier_CollectedRecord, ProgressManager.Instance_.RecordCollectedPoints_.ToString());
             str.Replace(SwapPartIdentifier_Max, LevelManager.Instance_.OnLevelPointCount_.ToString());
             str.Replace(SwapPartIdentifier_Name, PlayerDataContainer.Instance_.CurrentPlayerData_.Name);
             str.Replace(SwapPartIdentifier_Number, PlayerDataContainer.Instance_.CurrentPlayerData_.DataNumber.ToString());

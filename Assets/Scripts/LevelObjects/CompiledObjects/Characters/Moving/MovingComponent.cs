@@ -45,13 +45,11 @@ namespace PlannedRout.LevelObjects.Characters
                 Vector2Int physDir = PhysicDirection.GetIntegerPosition();
                 void BugFoundAction()
                 {
-                    Debug.Log("currPos:" + CurrentPosition_);
-                    Debug.Log("physDir:" + PhysicDirection);
-                    Debug.Log("parsedPhysDir:" + physDir);
-                    Debug.Log("target:" + new Vector2Int(CurrentPosition_.x + physDir.x, CurrentPosition_.y + physDir.y));
+                    Debug.Log("fix bug");
                     transform.position = new Vector3(CurrentPosition_.x,CurrentPosition_.y,transform.position.z);
                     ChangePositionEvent(CurrentPosition_);
                     StopMoving();
+                    InternalChangeDirection(MovingDirection_, true);
                 }
                 if (Vector2Int.Distance(CurrentPosition_, TargetPosition_) > 3)
                 {
@@ -95,6 +93,7 @@ namespace PlannedRout.LevelObjects.Characters
                 {
                     StopMoving();
                 }
+                ChangePositionEvent(CurrentPosition_);
             }
             else
             {
@@ -148,8 +147,6 @@ namespace PlannedRout.LevelObjects.Characters
             {
                 CurrentPosition_ = TargetPosition_;
             }
-
-            ChangePositionEvent(CurrentPosition_);
         }
         private bool CheckMovingPossibility(Vector2Int target)
         {
@@ -294,7 +291,9 @@ namespace PlannedRout.LevelObjects.Characters
         {
             if (IsMoving_)
             {
-                enabled = true;
+                StopMoving();
+                CurrentPosition_ = transform.position.GetIntegerPosition();
+                InternalChangeDirection(MovingDirection_, true);
             }
         }
         private void LevelReseted()

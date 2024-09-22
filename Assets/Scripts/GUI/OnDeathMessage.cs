@@ -39,7 +39,7 @@ namespace PlannedRout.Visual
             else
             {
                 DeathAnimation.IsBackToMenu = true;
-                if (ProgressManager.Instance_.CollectedPointsCount_ < LevelManager.Instance_.GlobalConsts_.CollectedPointToWin)
+                if (ProgressManager.Instance_.RecordCollectedPoints_ < LevelManager.Instance_.GlobalConsts_.CollectedPointToWin)
                 {
                     LoseMessage.Generate();
                 }

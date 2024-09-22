@@ -66,8 +66,8 @@ namespace PlannedRout.LevelManagment
         }
         public void AddLevelPart(ILevelPart part,int column,int row)
         {
-            if (GetCell(row, column) != null)
-                throw new System.Exception("Already have part at this cell.");
+            if (GetCell(column, row) != null)
+                throw new System.Exception("Already have part at this cell."+GetCell(column,row));
 
             LevelMap[column][row] = part;
         }

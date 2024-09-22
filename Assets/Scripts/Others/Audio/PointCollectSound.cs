@@ -30,7 +30,7 @@ namespace PlannedRout.Audio
             {
                 WinSoundSource.Play(); 
             }
-            else
+            else if(count!=0)
             {
                 CommonSoundSource.Play();
             }
