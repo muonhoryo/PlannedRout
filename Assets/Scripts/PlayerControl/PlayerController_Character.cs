@@ -1,5 +1,6 @@
 
 
+using System.Collections;
 using PlannedRout.LevelManagment;
 using PlannedRout.LevelObjects.Characters;
 using UnityEngine;
@@ -15,8 +16,7 @@ namespace PlannedRout.PlayerControl
         private float axisInput_Horizontal;
         private float axisInput_Vertical;
 
-        private float BackToMainMenuTime=float.MaxValue;
-        private bool IsActiveInput=false;
+        private Coroutine AFKDeathHandler=null;
 
         private void Update()
         {
@@ -26,8 +26,7 @@ namespace PlannedRout.PlayerControl
             void ChangeDirection(MovingComponent.MovingDirection direction)
             {
                 CharacterMovComponent.ChangeDirection(direction);
-                if (!IsActiveInput)
-                    IsActiveInput = true;
+                StopAFKDeathHandler();
             }
 
             if (axisInput_Horizontal!=0)
@@ -38,23 +37,25 @@ namespace PlannedRout.PlayerControl
             {
                 ChangeDirection(axisInput_Vertical < 0 ? MovingComponent.MovingDirection.Bottom : MovingComponent.MovingDirection.Top);
             }
-            else
+            else if (AFKDeathHandler == null)
             {
-                if (Time.realtimeSinceStartup >= BackToMainMenuTime)
-                {
-                    LevelManager.Instance_.PlayerCharacter_.GetComponent<PlayerDeath>().Death();
-                    BackToMainMenuTime = Time.realtimeSinceStartup + LevelManager.Instance_.GlobalConsts_.BackMainMenuTime;
-                }
-                else
-                {
-                    if (IsActiveInput)
-                    {
-                        IsActiveInput = false;
-                        BackToMainMenuTime = Time.realtimeSinceStartup+LevelManager.Instance_.GlobalConsts_.BackMainMenuTime;
-                    }
-                }
+                AFKDeathHandler = StartCoroutine(AFKDeath());
             }
         }
+        private IEnumerator AFKDeath()
+        {
+            yield return new WaitForSeconds(LevelManager.Instance_.GlobalConsts_.BackMainMenuTime);
+            LevelManager.Instance_.PlayerCharacter_.GetComponent<PlayerDeath>().Death();
+        }
+        private void StopAFKDeathHandler()
+        {
+            if (AFKDeathHandler != null)
+            {
+                StopCoroutine(AFKDeathHandler);
+                AFKDeathHandler = null;
+            }
+        }
+
         private void Awake()
         {
             GamePause.GamePausedEvent += GamePaused;
@@ -63,7 +64,7 @@ namespace PlannedRout.PlayerControl
         private void ReferredInitialization()
         {
             LevelManager.LevelInitializedEvent -= ReferredInitialization;
-            BackToMainMenuTime = Time.realtimeSinceStartup + LevelManager.Instance_.GlobalConsts_.BackMainMenuTime;
+            AFKDeathHandler = StartCoroutine(AFKDeath());
         }
         private void OnDestroy()
         {
@@ -75,6 +76,7 @@ namespace PlannedRout.PlayerControl
             GamePause.GamePausedEvent -= GamePaused;
             GamePause.GameUnpausedEvent += GameUnpaused;
             enabled = false;
+            StopAFKDeathHandler();
         }
         private void GameUnpaused()
         {

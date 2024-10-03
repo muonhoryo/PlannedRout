@@ -45,7 +45,7 @@ namespace PlannedRout.LevelObjects.Characters
                 Vector2Int physDir = PhysicDirection.GetIntegerPosition();
                 void BugFoundAction()
                 {
-                    Debug.Log("fix bug");
+                    Debug.Log("fix bug "+gameObject.name+"__"+CurrentPosition_+"___"+TargetPosition_);
                     transform.position = new Vector3(CurrentPosition_.x,CurrentPosition_.y,transform.position.z);
                     ChangePositionEvent(CurrentPosition_);
                     StopMoving();
@@ -67,7 +67,8 @@ namespace PlannedRout.LevelObjects.Characters
                     else
                     {
                         Vector2Int currPos = new Vector2Int((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y));
-                        if (LevelManager.Instance_.GetCell(currPos.x, currPos.y) != null &&
+                        if (LevelManager.Instance_.CheckCellPosition(currPos.x, currPos.y)&& 
+                            LevelManager.Instance_.GetCell(currPos.x, currPos.y) != null &&
                             LevelManager.Instance_.GetCell(currPos.x, currPos.y).PartType_ == ILevelPart.LevelPartType.Wall)
                         {
                             BugFoundAction();
@@ -291,14 +292,14 @@ namespace PlannedRout.LevelObjects.Characters
         {
             if (IsMoving_)
             {
-                StopMoving();
                 CurrentPosition_ = transform.position.GetIntegerPosition();
+                StopMoving();
                 InternalChangeDirection(MovingDirection_, true);
             }
         }
         private void LevelReseted()
         {
-            CurrentPosition_ =new Vector2Int((int)transform.position.x,(int)transform.position.y);
+            CurrentPosition_ = transform.position.GetIntegerPosition();
             StopMoving();
             InternalChangeDirection(MovingDirection_, true);
         }
